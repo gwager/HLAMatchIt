@@ -12,3 +12,7 @@ class allele2aa(AppConfig):
 class ismatch(AppConfig):
     #default_auto_field = 'django.db.models.BigAutoField'
     name = 'ismatch'
+
+class mmcount(AppConfig):
+    #default_auto_field = 'django.db.models.BigAutoField'
+    name = 'mmcount'

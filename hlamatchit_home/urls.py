@@ -4,9 +4,12 @@ from django.conf.urls import include
 from django.contrib import admin
 from urllib import response
 from django.shortcuts import render
+from hlamatchit_home import views
 from . import views
 from . import views_aa
 from . import views_match
+from . import views_mmcount
+
 
 
 urlpatterns = [
@@ -16,5 +19,7 @@ urlpatterns = [
     path('allele2aa_out.html/', views_aa.allele2aa_out, name = 'allele2aa_out.html'),
     path('ismatch.html/', views_match.ismatch, name = 'ismatch.html'),
     path('ismatch_out.html/', views_match.ismatch_out, name = 'ismatch_out.html'),
+    path('mmcount.html/', views_mmcount.mmcount, name = 'mmcount.html'),
+    path('mmcount_out.html/', views_mmcount.mmcount_out, name = 'mmcount_out.html'),
 ]
 
