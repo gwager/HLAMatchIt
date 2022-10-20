@@ -2,6 +2,7 @@
 
 # aa_matching.py - Module for amino acid matching functions
 
+from pickle import FALSE, TRUE
 import Bio
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
@@ -90,7 +91,7 @@ ard_end_pos_incomplete = {
 
 
 # load protein sequence file to get full protein sequences into SeqRecord file
-seq_filename = "./IMGT_HLA_Full_Protein_Latest.txt"
+seq_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/IMGT_HLA_Full_Protein_3330.txt"
 seqfile = open(seq_filename, "r")
 
 HLA_full_allele = {} # Full four-field allele names
@@ -142,6 +143,8 @@ def getAAsubstring(allele,start_position,end_position):
 
 # get the AA at any position of any HLA allele
 def getAAposition(allele,position):
+	position = int(position)
+	AA = HLA_seq[allele].seq[position-1]
 	return HLA_seq[allele].seq[position-1]
 
 # get the SFVT epitope name (with underscore)
@@ -159,10 +162,11 @@ def getEpitope(allele,position_list):
 def isPositionMismatched(allele1,allele2,position):
 	AA_allele1 = getAAposition(allele1,position)
 	AA_allele2 = getAAposition(allele2,position)
+	position = int(position)
 	if (AA_allele1 != AA_allele2):
-		return True
+		return int(True)
 	else:
-		return False
+		return int(False)
 
 # count number of mismatches at position between donor and recip
 # getTruth function from runMatchMC
