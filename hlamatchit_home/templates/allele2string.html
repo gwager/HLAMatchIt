@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
+    <title>HLA Allele to Amino Acid String Tool</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body> 
+<div class="text-center  pt-1 pb-1">
+    <h1 class="text-success jumbotron font-weight-bold"> HLA Amino Acid String Lookup </h1> 
+</div> 
+
+<div>
+<h2 class="container text-danger text-center font-weight-bold mt-5 mb-5"> Based on Multiple Sequence Alignments from IMGT/HLA </h2>
+
+    <p class="container jumbotron pt-4 pb-4 lead" > Enter HLA Allele and the range of positions of interest </p>
+    
+    <form class="container text-center text-primary mt-5" action="{% url 'allele2string_out.html' %}" method="get">
+       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Allele </h4>
+       <textarea name = "userinput10" rows = "1" cols = "10" >DPB1*04:01</textarea>
+       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Start Position </h4>
+       <textarea name = "userinput11" rows = "1" cols = "10" >1</textarea> 
+       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> End Position </h4>
+       <textarea name = "userinput12" rows = "1" cols = "10" >94</textarea>  
+       <br>
+       <input class="btn btn-danger btn-lg active mt-5 text-center" type="submit" value="SUBMIT"/> </div> 
+    </form>
+    <br>
+    <br>
+    <br>  
+</div>
+<div class="jumbotron text-white mt-5 pt-2 pb-2" style="background-color: #003399;"> 
+<h3 class="container text-center font-italic" > Contact Us </h3>
+     <h5 class="container text-center font-italic"> For scientific and technical queries contact pathologygragertlab@tulane.edu.  </h5>
+     <br>
+<h4 class="container text-center font-italic"> Cite AA Position Tool</h4>
+    <p class= "container text-center font-italic"> Manuscript under preparation </p>
+     <p class="container text-center font-weight-bold"> Prototype Tool for Research Use Only </p>
+</div>     
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"  crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+
+</body>
+</html>

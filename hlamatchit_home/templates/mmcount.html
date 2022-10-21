@@ -6,13 +6,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     
-    <title>Donor and Recipient HLA Loci Mismatch Count Tool </title>
+    <title>Type 1 and Type 2 HLA Loci Mismatch Count Tool </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body> 
 <div class="text-center  pt-1 pb-1">
-    <h1 class="text-success jumbotron font-weight-bold"> Donor and Recipient HLA Loci Mismatch Count Tool </h1> 
+    <h1 class="text-success jumbotron font-weight-bold"> Type 1 and Type 2 HLA Loci Mismatch Count Tool </h1> 
 </div> 
 
 <div>
@@ -21,13 +21,13 @@
     <p class="container jumbotron pt-4 pb-4 lead" > Enter subjects alleles for a specific HLA Loci and recieve a count of potential mismatches) </p>
     
     <form class="container text-center text-primary mt-5" action="{% url 'mmcount_out.html' %}" method="get">
-       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Donor1 </h4>
+       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 1.1 </h4>
        <textarea name = "userinput6" rows = "1" cols = "10" >DRB1*04:01</textarea>
-       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Donor2 </h4>
+       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 1.2 </h4>
        <textarea name = "userinput7" rows = "1" cols = "10" >DRB1*07:01</textarea>  
-       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Recipient1 </h4>
+       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 2.1 </h4>
        <textarea name = "userinput8" rows = "1" cols = "10" >DRB1*04:01</textarea>
-       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Recipient2 </h4>
+       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 2.2 </h4>
        <textarea name = "userinput9" rows = "1" cols = "10" >DRB1*07:01</textarea>  
        <br>
        <input class="btn btn-danger btn-lg active mt-5 text-center" type="submit" value="SUBMIT"/> </div> 

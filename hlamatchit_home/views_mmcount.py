@@ -24,6 +24,6 @@ def mmcount_out(request):
     print(count)
 
     return render(request, 'mmcount_out.html', 
-        {'Donor1': aa1_donor,'Donor2': aa2_donor, 'Recipient1': aa1_recip,'Recipient2': aa2_recip, 'Mismatches': count })
+        {'TypeA1': aa1_donor,'TypeA2': aa2_donor, 'TypeB1': aa1_recip,'TypeB2': aa2_recip, 'Mismatches': count })
 
 

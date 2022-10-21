@@ -9,6 +9,10 @@ class allele2aa(AppConfig):
     #default_auto_field = 'django.db.models.BigAutoField'
     name = 'allele2aa'
 
+class allele2string(AppConfig):
+    #default_auto_field = 'django.db.models.BigAutoField'
+    name = 'allele2string'
+
 class ismatch(AppConfig):
     #default_auto_field = 'django.db.models.BigAutoField'
     name = 'ismatch'

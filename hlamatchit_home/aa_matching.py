@@ -139,6 +139,9 @@ for line in seqfile:
 # get the AA mature protein subsequence of any HLA allele
 # Python strings start at zero, but amino acid sequences start at position 1
 def getAAsubstring(allele,start_position,end_position):
+	start_position = int(start_position)
+	end_position = int(end_position)
+	string = HLA_seq[allele].seq[start_position-1:end_position]
 	return HLA_seq[allele].seq[start_position-1:end_position]
 
 # get the AA at any position of any HLA allele
