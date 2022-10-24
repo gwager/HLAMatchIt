@@ -11,7 +11,7 @@ from . import views_string
 from . import views_match
 from . import views_mmcount
 from . import views_stringcount
-
+from . import views_antigen2aa
 
 
 
@@ -28,5 +28,7 @@ urlpatterns = [
     path('mmcount_out.html/', views_mmcount.mmcount_out, name = 'mmcount_out.html'),
     path('stringcount.html/', views_stringcount.stringcount, name = 'stringcount.html'),
     path('stringcount_out.html/', views_stringcount.stringcount_out, name = 'stringcount_out.html'),
+    path('antigen2aa.html/', views_antigen2aa.antigen2aa, name = 'antigen2aa.html'),
+    path('antigen2aa_out.html/', views_antigen2aa.antigen2aa_out, name = 'antigen2aa_out.html'),
 ]
 

@@ -11,6 +11,7 @@ from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
 import pandas as pd
 import random
+import tarfile
 
 # mature protein sequence offsets differ by locus
 # get offsets by examining mature protein length in IMGT/HLA alignment tool
@@ -90,6 +91,8 @@ ard_end_pos_incomplete = {
     "DPB1" : 92, # DPB1*01:01:03
 }
 
+#race = ["AAFA","AFA", "AFB", "AINDI", "AISC","ALANAM" , "AMIND", "API", "CARB","CARHIS", "CARIBI", "CAU", "EURCAU", "FILII","HAWI","HIS", "JAPI", "KORI", "MENAFC", "MSWHIS", "NAM", "NCHI", "SCAHIS", "SCAMB", "SCSEAI", "VIET"]
+
 
 # load protein sequence file to get full protein sequences into SeqRecord file
 seq_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/IMGT_HLA_Full_Protein_3330.txt"
@@ -98,8 +101,10 @@ seqfile = open(seq_filename, "r")
 anti_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/OPTN_antigens_to_alleles_CPRA.txt"
 antifile = open(anti_filename, "r")
 
-freqs_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/freqs_9loc_2020_trim.tar.gz"
-freqsfile = open(freqs_filename, "r")
+def freqfileselect(race):
+	freqs_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/freqs_9loc_2020_trim/freqs.", race,".csv"
+	#freqsfile = open(freqs_filename, "r")
+	return freqs_filename
 
 HLA_full_allele = {} # Full four-field allele names
 HLA_seq = {} # Two-field
@@ -142,6 +147,7 @@ for line in seqfile:
 
 	# print (HLA_seqrecord_dict[allele].seq)
 
+#identifying and pulling alleles from antigens
 
 # get the AA mature protein subsequence of any HLA allele
 # Python strings start at zero, but amino acid sequences start at position 1
@@ -277,6 +283,48 @@ def getAAstringmatch(allele1, allele2,start_position,end_position):
 	end_position = int(end_position)
 	return string1, string2, mm_count, pos_list
 
+#definitions to generate desired webtool
+
+def highfreq(race, allele):
+	freqs_filename = freqfileselect(race)
+	freqsfile = open(freqs_filename, "r")
+	possible_freqs = []
+	for line in freqsfile:
+		(Haplo,Count,Freq) = line.split("\t")
+		if (allele in Haplo):
+			allele_freq = (Freq + Freq)
+			possible_freqs.append(Haplo,allele_freq)
+		else:
+			continue
+	possible_freqs = str(possible_freqs)
+	print(possible_freqs)
+	highest = max(possible_freqs[Haplo][allele_freq])
+	highest = str(highest)
+	return highest
+
+
+def antigen2allele(antigen):
+	alleles = antifile[antigen]
+	print(alleles)
+	return alleles
+
+def antigen2HFallele(race,antigen):
+	alleles = antigen2allele(antigen)
+	list(alleles)
+	print(alleles)
+	possible_alleles = []
+	for allele in alleles:
+		possible = highfreq(allele)
+		possible_alleles.append(possible)
+	print("antigen2alles:", possible_alleles)
+	possible_allele_freqs = []
+	for allele in possible_alleles:
+		pos_freq = highfreq(race, allele)
+		possible_allele_freqs.append(pos_freq)
+	print("high freq function:", possible_allele_freqs)
+	highest = max(possible_allele_freqs[pos_freq])
+	print("max:", highest)
+	return highest
 
 
 # weighted choice from https://scaron.info/blog/python-weighted-choice.html
