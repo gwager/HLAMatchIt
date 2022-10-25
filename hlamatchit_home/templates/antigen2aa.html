@@ -12,13 +12,13 @@
 
 <body> 
 <div class="text-center  pt-1 pb-1">
-    <h1 class="text-success jumbotron font-weight-bold">HLA Antigen to most probable Allele ToolTool</h1> 
+    <h1 class="text-success jumbotron font-weight-bold">HLA Antigen to most probable Allele Tool for A,C,B,DRB1,DQA1,DQB1,DPA1,and DPB1 antigens</h1> 
 </div> 
 
 <div>
 <h2 class="container text-danger text-center font-weight-bold mt-5 mb-5"> Based on Multiple Sequence Alignments from IMGT/HLA </h2>
 
-    <p class="container jumbotron pt-4 pb-4 lead" > Enter Race and Antigen of Type1 and Type2 to generate most probable Allele</p>
+    <p class="container jumbotron pt-4 pb-4 lead" > Enter Race and Antigen of Type1 and Type2 to generate most probable Allele, then enter range of positions to be analyzed</p>
     <p class="container jumbotron pt-4 pb-4 lead" > Most probable Alleles for Type1 and Type2 will then be analyzed for AA mismatches and FIBERS binning </p>
     <form class="container text-center text-primary mt-5" action="{% url 'antigen2aa_out.html' %}" method="get">
        <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 1 </h4>
@@ -26,7 +26,11 @@
        <textarea name = "userinput18" rows = "1" cols = "10" >DR7</textarea>
        <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 2 </h4>
        <textarea name = "userinput19" rows = "1" cols = "10" >AFA</textarea>
-       <textarea name = "userinput20" rows = "1" cols = "10" >DR53</textarea> 
+       <textarea name = "userinput20" rows = "1" cols = "10" >DR4</textarea> 
+       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Range </h4>
+       <textarea name = "userinput21" rows = "1" cols = "10" >1</textarea>
+       <textarea name = "userinput22" rows = "1" cols = "10" >94</textarea> 
+
        <br>
        <input class="btn btn-danger btn-lg active mt-5 text-center" type="submit" value="SUBMIT"/> </div> 
     </form>

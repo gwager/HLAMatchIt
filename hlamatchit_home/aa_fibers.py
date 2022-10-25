@@ -271,6 +271,8 @@ def getAAstringmatch(allele1, allele2,start_position,end_position):
 	string2 = HLA_seq[allele2].seq[start_position-1:end_position]
 	mm_count = 0
 	pos_list = []
+	pos1_list = []
+	pos2_list = []
 	string1 = str(string1)
 	string2 = str(string2)
 	start_position = int(start_position)
@@ -284,12 +286,19 @@ def getAAstringmatch(allele1, allele2,start_position,end_position):
 		else:
 			mm_count+=1
 			pos_list.append(pos)
+			pos1_list.append(pos)
+			pos2_list.append(pos)
+			pos1_list.append(aa1)
+			pos2_list.append(aa2)
+
 	string1 = str(string1)
 	string2 = str(string2)
 	pos_list = str(pos_list)
+	pos1_list = str(pos1_list)
+	pos2_list = str(pos2_list)
 	start_position = int(start_position)
 	end_position = int(end_position)
-	return string1, string2, mm_count, pos_list
+	return string1, string2, mm_count, pos_list, pos1_list, pos2_list
 
 #definitions to generate desired webtool
 
