@@ -16,8 +16,6 @@ from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
 import pandas as pd
 import random
-import tarfile
-from aa_matching_msf import *
 
 
 # mature protein sequence offsets differ by locus
@@ -309,22 +307,7 @@ def highfreq(race, allele):
 			(A,C,B,DRB345,DRB1,DQA1,DQB1,DPA1,DPB1) = Haplo.split ('~')
 			freq= float(Freq)
 			possible_string_value += freq
-			#allelex = str(allele)
-			#allele_freq = (freq + freq)
-			#if allelex not in possible_freqs:
-				#possible_freqs[allelex]=freq
-			#else:
-				#possible_freqs[allelex]=possible_freqs[allelex]+freq
-		#else:
-			#continue
-			#print("NA")
-	#possible_string= str(possible_freqs)
-	#possible_string_value = possible_freqs.items()
-	#for possible_string_value in possible_freqs:
-		#str += possible_freqs[possible_string_value] + " "
-	#possible_string = int(possible_string)
-	#print(possible_string)
-	#possible_string_value = str(possible_string_value)
+
 	return possible_string_value
 
 #utilized code from https://github.com/lgragert/unos-cpra-calculator/blob/main/unos/cpra/cpra2022_nonARD_lib.py
@@ -352,30 +335,7 @@ def antigen2allele(antigen):
 
 def antigen2HFallele(race,antigen):
 	alleles = antigen2allele(antigen)
-	#antigen_allele_list = {}
-	#anti_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/OPTN_antigens_to_alleles_CPRA.txt"
-	#antifile = open(anti_filename, "r")
-	#for row in antifile:
-	#	row=row.rstrip()
-	#	print(antigen)
-	#	if antigen in row:
-	#		(antigen,alleles_gl) = row.split("\t")
-	#		allele_list = alleles_gl.split("/")
-	#		antigen_allele_list[antigen] = ",".join(allele_list)
-	#		print(antigen_allele_list)
-	#	else:
-	#		continue
-	#print(antigen)
-	#print(allele_list)
-	#alleles = allele_list
-
-	print(alleles)
-	#freqs_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/freqs_9loc_2020_trim/freqs." +race + ".csv"
-		#print(freqs_filename)
-	#freqsfile = open(freqs_filename, "r")
-	#list(alleles)
-	#print("alleles in antigen2HFalleles:", alleles)
-	#possible_freqs = defaultdict(dict)
+	#print(alleles)
 	possible_alleles = defaultdict(dict)
 	for allele in alleles:
 		#print(allele)
@@ -384,63 +344,11 @@ def antigen2HFallele(race,antigen):
 			possible_alleles[allele]=possible
 		else:
 			continue
-		#print(freqs_filename)
-		#for line in freqsfile:
-			#print(line)
-			#(Haplo,Count,Freq) = line.split(",")
-			#if (allele in Haplo):
-				#print(allele)
-				#(A,C,B,DRB345,DRB1,DQA1,DQB1,DPA1,DPB1) = Haplo.split ('~')
-				#freq= float(Freq)
-				#allelex = str(allele)
-				#allele_freq = (freq + freq)
-				#if allelex not in possible_freqs:
-					#possible_freqs[allelex]=freq
-				#else:
-					#possible_freqs[allelex]=possible_freqs[allelex]+freq
-			#else:
-				#continue
-	print("antigen2alles:", possible_alleles)
-	#antifile.close()
-	#max_freq = max(possible_freqs.values())
-	#max_allele = max(possible_freqs, key=possible_freqs.get)
+	#print("antigen2alles:", possible_alleles)
 	max_freq = max(possible_alleles.values())
 	max_allele = max(possible_alleles, key=possible_alleles.get)
 	#print(max_allele, max_freq)
 	return max_allele, max_freq
-
-def allele2AAstring(allele1, allele2):
-	loc = ['A','C','B','DRB1','DQA1','DQB1','DPA1','DPB1']
-	for loc in allele1:
-		if (loc == 'A'):
-			Aloc = loc[0].split('*')[0]
-			start_position = aa_mm.ard_start_pos[Aloc]
-			end_position = aa_mm.ard_end_pos[Aloc]
-	start_position = int(start_position)
-	end_position = int(end_position)
-	string1 = HLA_seq[allele1].seq[start_position-1:end_position]
-	string2 = HLA_seq[allele2].seq[start_position-1:end_position]
-	mm_count = 0
-	pos_list = []
-	string1 = str(string1)
-	string2 = str(string2)
-	start_position = int(start_position)
-	end_position = int(end_position)
-	for pos in range(start_position,end_position):
-		aa1 = string1[pos-1]
-		aa2 = string2[pos-1]
-		#print(aa1, '+', aa2)
-		if(aa1 == aa2):
-			continue
-		else:
-			mm_count+=1
-			pos_list.append(pos)
-	string1 = str(string1)
-	string2 = str(string2)
-	pos_list = str(pos_list)
-	start_position = int(start_position)
-	end_position = int(end_position)
-	return string1, string2, mm_count, pos_list
 
 
 # weighted choice from https://scaron.info/blog/python-weighted-choice.html
