@@ -16,6 +16,9 @@ from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
 import pandas as pd
 import random
+#from "./AminoAcidMatching/aa_matching_msf" import *
+#aa_mm = AAMatch(dbversion=3420)
+
 
 
 # mature protein sequence offsets differ by locus
@@ -264,9 +267,9 @@ def AA_MM_Allele(allele1_donor,allele2_donor,allele1_recip,allele2_recip,positio
 
 
 #new function to get AA string mismatches from alleles
-def getAAstringmatch(allele1, allele2,start_position,end_position):
-	start_position = int(start_position)
-	end_position = int(end_position)
+def getAAstringmatch(allele1, allele2, locus):
+	start_position = ard_start_pos[locus]
+	end_position = ard_end_pos[locus]
 	string1 = HLA_seq[allele1].seq[start_position-1:end_position]
 	string2 = HLA_seq[allele2].seq[start_position-1:end_position]
 	mm_count = 0
@@ -298,7 +301,7 @@ def getAAstringmatch(allele1, allele2,start_position,end_position):
 	pos2_list = str(pos2_list)
 	start_position = int(start_position)
 	end_position = int(end_position)
-	return string1, string2, mm_count, pos_list, pos1_list, pos2_list
+	return string1, string2, mm_count, pos_list, pos1_list, pos2_list, end_position
 
 #definitions to generate desired webtool
 
@@ -358,6 +361,22 @@ def antigen2HFallele(race,antigen):
 	max_allele = max(possible_alleles, key=possible_alleles.get)
 	#print(max_allele, max_freq)
 	return max_allele, max_freq
+
+def fibers(locus,pos_list):
+	for pos in pos_list:
+		hazard = 0
+		if (locus == "A"):
+			if (pos == "12|44|63|105|111|114|152|161|166|167"):
+				hazard = 1.09
+		if (locus== "C"):
+			if (pos== "11|35|30|31|39|41|46|65|70|97|108|122|143|156|160|163|176|179"):
+				hazard = 1.04
+		if (locus == "B"):
+			if (pos == "23|24|46|67|136|145"):
+				hazard = 1.04
+	return hazard
+
+
 
 
 # weighted choice from https://scaron.info/blog/python-weighted-choice.html

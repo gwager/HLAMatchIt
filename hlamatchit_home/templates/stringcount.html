@@ -21,14 +21,12 @@
     <p class="container jumbotron pt-4 pb-4 lead" > Enter Alleles for a specific HLA Loci and recieve a count of potential mismatches </p>
     
     <form class="container text-center text-primary mt-5" action="{% url 'stringcount_out.html' %}" method="get">
+        <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Locus</h4>
+        <textarea name = "userinput13" rows = "1" cols = "10" >DRB1</textarea>
        <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 1 </h4>
-       <textarea name = "userinput13" rows = "1" cols = "10" >DRB1*04:01</textarea>
+       <textarea name = "userinput14" rows = "1" cols = "10" >DRB1*04:01</textarea>
        <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 2 </h4>
-       <textarea name = "userinput14" rows = "1" cols = "10" >DRB1*07:01</textarea> 
-       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Start Position </h4>
-       <textarea name = "userinput15" rows = "1" cols = "10" >1</textarea>   
-       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> End Position </h4>
-       <textarea name = "userinput16" rows = "1" cols = "10" >94</textarea>   
+       <textarea name = "userinput15" rows = "1" cols = "10" >DRB1*07:01</textarea>   
        <br>
        <input class="btn btn-danger btn-lg active mt-5 text-center" type="submit" value="SUBMIT"/> </div> 
     </form>
