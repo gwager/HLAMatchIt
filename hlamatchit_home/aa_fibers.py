@@ -296,9 +296,9 @@ def getAAstringmatch(allele1, allele2, locus):
 
 	string1 = str(string1)
 	string2 = str(string2)
-	pos_list = str(pos_list)
-	pos1_list = str(pos1_list)
-	pos2_list = str(pos2_list)
+	pos_list = ', '.join(str(item) for item in pos_list)
+	pos1_list = ', '.join(str(item) for item in pos1_list)
+	pos2_list = ', '.join(str(item) for item in pos2_list)
 	start_position = int(start_position)
 	end_position = int(end_position)
 	return string1, string2, mm_count, pos_list, pos1_list, pos2_list, end_position
@@ -363,17 +363,30 @@ def antigen2HFallele(race,antigen):
 	return max_allele, max_freq
 
 def fibers(locus,pos_list):
+	#print(locus)
+	#print(pos_list)
+	pos_list = pos_list.split(',')
+	hazard = 0
 	for pos in pos_list:
-		hazard = 0
+		print(pos)
 		if (locus == "A"):
-			if (pos == "12|44|63|105|111|114|152|161|166|167"):
+			if (pos == 12|44|63|105|111|114|152|161|166|167):
 				hazard = 1.09
 		if (locus== "C"):
-			if (pos== "11|35|30|31|39|41|46|65|70|97|108|122|143|156|160|163|176|179"):
+			if (pos== 11|35|30|31|39|41|46|65|70|97|108|122|143|156|160|163|176|179):
 				hazard = 1.04
 		if (locus == "B"):
-			if (pos == "23|24|46|67|136|145"):
+			if (pos == 23|24|46|67|136|145):
 				hazard = 1.04
+		if (locus == "DQB1"):
+			if (pos == 18|49|55|66|74):
+				hazard = 1.07
+		if (locus == "DRB1"):
+			print(locus)
+			if (pos== "11") or (pos == "14") or (pos=="16") or (pos=="23") or (pos=="26") or (pos=="28") or (pos=="30") or (pos=="32") or (pos=="37") or (pos=="50") or (pos=="51") or (pos=="60") or (pos== "78"):
+				hazard = 1.11
+				print(hazard)
+	
 	return hazard
 
 
