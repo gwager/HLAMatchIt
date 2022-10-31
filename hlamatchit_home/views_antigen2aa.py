@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .aa_matching import getAAposition
 from .aa_matching import isPositionMismatched
-from .aa_fibers import antigen2HFallele, antigen2allele, highfreq, freqfileselect,getAAstringmatch, fibers
+from .aa_fibers import antigen2HFallele, antigen2allele, highfreq, freqfileselect,getAAstringmatch, fibershazard, fibersprobability
 
 
 # Create your views here.
@@ -31,12 +31,14 @@ def antigen2aa_out(request):
 
     range = end_pos
 
-    hazard = fibers(locus, pos)
+    hazard,fprob = fibershazard(locus, pos)
+    #fprob = fibersprobability(locus, pos)
+
 
 
 
     
     return render(request, 'antigen2aa_out.html', 
-        {'Race1': race1,'Antigen1': antigen1,'Allele1': allele1, 'Freq1': freq1,'Race2': race2,'Antigen2': antigen2,'Allele2': allele2, 'Freq2': freq2, 'Range': range ,'str1': a1, 'str2':a2,'total': count, 'pos': pos,'pos1': pos1,'pos2': pos2, 'hazard': hazard })
+        {'Race1': race1,'Antigen1': antigen1,'Allele1': allele1, 'Freq1': freq1,'Race2': race2,'Antigen2': antigen2,'Allele2': allele2, 'Freq2': freq2, 'Range': range ,'str1': a1, 'str2':a2,'total': count, 'pos': pos,'pos1': pos1,'pos2': pos2, 'fprob': fprob,'hazard': hazard })
 
 

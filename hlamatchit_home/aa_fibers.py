@@ -362,13 +362,15 @@ def antigen2HFallele(race,antigen):
 	#print(max_allele, max_freq)
 	return max_allele, max_freq
 
-def fibers(locus,pos_list):
+def fibershazard(locus,pos_list):
 	#print(locus)
 	#print(pos_list)
-	pos_list = pos_list.split(',')
+	fibers_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/AAMMData.csv"
+	fibersfile = open(fibers_filename, "r")
+	pos_list = pos_list.replace(" ","")
+	pos_list = pos_list.split(",")
 	hazard = 0
 	for pos in pos_list:
-		print(pos)
 		if (locus == "A"):
 			if (pos == 12|44|63|105|111|114|152|161|166|167):
 				hazard = 1.09
@@ -383,11 +385,47 @@ def fibers(locus,pos_list):
 				hazard = 1.07
 		if (locus == "DRB1"):
 			print(locus)
+			print(pos)
 			if (pos== "11") or (pos == "14") or (pos=="16") or (pos=="23") or (pos=="26") or (pos=="28") or (pos=="30") or (pos=="32") or (pos=="37") or (pos=="50") or (pos=="51") or (pos=="60") or (pos== "78"):
 				hazard = 1.11
-				print(hazard)
-	
-	return hazard
+	prob_list = []
+	#print(saap)
+	for line in fibersfile:
+		(AAP,Freq,Var) = line.split(",")
+		#print(AAP)
+		for pos in pos_list:
+			saap = locus + "_" + pos
+			if (AAP == saap):
+				prob = Freq
+				prob_list.append(saap)
+				prob_list.append(prob)
+			else:
+				continue
+	prob_list = ', '.join(str(item) for item in prob_list)	
+	return hazard, prob_list
+
+def fibersprobability(locus, pos_list):
+	fibers_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/AAMMData.csv"
+	fibersfile = open(fibers_filename, "r")
+	pos_list = pos_list.replace(" ","")
+	pos_list = pos_list.split(",")
+	prob_list = []
+	for pos in pos_list:
+		saap = locus + "_" + pos
+		print(saap)
+		for line in fibersfile:
+			(AAP,Freq,Var) = line.split(",")
+			if (saap == AAP):
+				print(AAP)
+				prob = Freq
+				prob_list.append(saap)
+				prob_list.append(prob)
+			else:
+				continue
+	prob_list = ', '.join(str(item) for item in prob_list)
+	return prob_list
+
+
 
 
 
