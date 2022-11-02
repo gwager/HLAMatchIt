@@ -305,6 +305,54 @@ def getAAstringmatch(allele1, allele2, locus):
 
 #definitions to generate desired webtool
 
+def getAAgenostringmatch(da1, da2, ra1, ra2, locus):
+	start_position = ard_start_pos[locus]
+	end_position = ard_end_pos[locus]
+	dstring1 = HLA_seq[da1].seq[start_position-1:end_position]
+	dstring2 = HLA_seq[da2].seq[start_position-1:end_position]
+	rstring1 = HLA_seq[ra1].seq[start_position-1:end_position]
+	rstring2 = HLA_seq[ra2].seq[start_position-1:end_position]
+	mm_count = 0
+	pos_list = []
+	pos1_list = []
+	dstring1 = str(dstring1)
+	dstring2 = str(dstring2)
+	rstring1 = str(rstring1)
+	rstring2 = str(rstring2)
+	start_position = int(start_position)
+	end_position = int(end_position)
+	for pos in range(start_position,end_position):
+		daa1 = dstring1[pos-1]
+		daa2 = dstring2[pos-1]
+		raa1 = rstring1[pos-1]
+		raa2 = rstring2[pos-1]
+		daa = daa1 + daa2
+		#print(daa)
+		daa = (daa)
+		daa = ''.join(sorted(daa, key=str.lower))
+		#print(daa)
+		raa = raa1 + raa2
+		raa = ''.join(sorted(raa, key=str.lower))
+		#print(raa , daa)
+		if(raa == daa):
+			continue
+		else:
+			mm_count+=1
+			pos_list.append(pos)
+			pos1_list.append(pos)
+			combo = daa + "|" + raa
+			pos1_list.append(combo)
+
+	dstring1 = str(dstring1)
+	dstring2 = str(dstring2)
+	rstring1 = str(rstring1)
+	rstring2 = str(rstring2)
+	pos_list = ', '.join(str(item) for item in pos_list)
+	pos1_list = ', '.join(str(item) for item in pos1_list)
+	start_position = int(start_position)
+	end_position = int(end_position)
+	return dstring1, dstring2, rstring1, rstring2, mm_count, pos_list, pos1_list, end_position
+
 def highfreq(race, allele):
 	freqs_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/freqs_9loc_2020_trim/freqs." +race + ".csv"
 	#print(freqs_filename)
@@ -362,71 +410,130 @@ def antigen2HFallele(race,antigen):
 	#print(max_allele, max_freq)
 	return max_allele, max_freq
 
-def fibershazard(locus,pos_list):
+def afibershazard(pos_list):
 	#print(locus)
 	#print(pos_list)
-	fibers_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/AAMMData.csv"
-	fibersfile = open(fibers_filename, "r")
 	pos_list = pos_list.replace(" ","")
 	pos_list = pos_list.split(",")
-	hazard = 0
+	ahazard = 0
+	pos2_list = []
 	for pos in pos_list:
-		if (locus == "A"):
-			if (pos == 12|44|63|105|111|114|152|161|166|167):
-				hazard = 1.09
-		if (locus== "C"):
-			if (pos== 11|35|30|31|39|41|46|65|70|97|108|122|143|156|160|163|176|179):
-				hazard = 1.04
-		if (locus == "B"):
-			if (pos == 23|24|46|67|136|145):
-				hazard = 1.04
-		if (locus == "DQB1"):
-			if (pos == 18|49|55|66|74):
-				hazard = 1.07
-		if (locus == "DRB1"):
-			print(locus)
-			print(pos)
-			if (pos== "11") or (pos == "14") or (pos=="16") or (pos=="23") or (pos=="26") or (pos=="28") or (pos=="30") or (pos=="32") or (pos=="37") or (pos=="50") or (pos=="51") or (pos=="60") or (pos== "78"):
-				hazard = 1.11
-	prob_list = []
-	#print(saap)
-	for line in fibersfile:
-		(AAP,Freq,Var) = line.split(",")
-		#print(AAP)
-		for pos in pos_list:
-			saap = locus + "_" + pos
-			if (AAP == saap):
-				prob = Freq
-				prob_list.append(saap)
-				prob_list.append(prob)
-			else:
-				continue
-	prob_list = ', '.join(str(item) for item in prob_list)	
-	return hazard, prob_list
+		if (pos == "12") or (pos =="44") or (pos=="63") or (pos=="105") or (pos == "111") or (pos=="114") or (pos=="152") or (pos=="161") or (pos == "166") or (pos== "167"):
+			ahazard = 1.09
+			pos2_list.append(pos)
+	pos2_list = ', '.join(str(item) for item in pos2_list)
+	return ahazard, pos2_list
 
-def fibersprobability(locus, pos_list):
-	fibers_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/AAMMData.csv"
-	fibersfile = open(fibers_filename, "r")
+def cfibershazard(pos_list):
+#print(locus)
+#print(pos_list)
 	pos_list = pos_list.replace(" ","")
 	pos_list = pos_list.split(",")
-	prob_list = []
+	chazard = 0
+	pos2_list = []
 	for pos in pos_list:
-		saap = locus + "_" + pos
-		print(saap)
-		for line in fibersfile:
-			(AAP,Freq,Var) = line.split(",")
-			if (saap == AAP):
-				print(AAP)
-				prob = Freq
-				prob_list.append(saap)
-				prob_list.append(prob)
-			else:
-				continue
-	prob_list = ', '.join(str(item) for item in prob_list)
-	return prob_list
+		if (pos== "11") or (pos== "35") or (pos== "30") or (pos=="31") or (pos=="39") or (pos=="41") or (pos=="46") or (pos== "65") or (pos=="70") or (pos=="97") or (pos=="108") or (pos=="122") or (pos=="143") or (pos=="156") or (pos=="160") or (pos=="163") or (pos=="176") or (pos=="179"):
+			chazard = 1.04
+			pos2_list.append(pos)
+	pos2_list = ', '.join(str(item) for item in pos2_list)
+	return chazard, pos2_list
 
 
+def bfibershazard(pos_list):
+#print(locus)
+#print(pos_list)
+	pos_list = pos_list.replace(" ","")
+	pos_list = pos_list.split(",")
+	bhazard = 0
+	pos2_list = []
+	for pos in pos_list:
+		if (pos == "23") or (pos=="24") or (pos=="46") or (pos=="67") or (pos=="136") or (pos=="145"):
+			bhazard = 1.04
+			pos2_list.append(pos)
+	pos2_list = ', '.join(str(item) for item in pos2_list)
+	return bhazard, pos2_list
 
+
+def drfibershazard(pos_list):
+	#print(locus)
+	#print(pos_list)
+	pos_list = pos_list.replace(" ","")
+	pos_list = pos_list.split(",")
+	drhazard = 0
+	pos2_list = []
+	prob = 0
+	for pos in pos_list:
+		if (pos== "11") or (pos == "14") or (pos=="16") or (pos=="23") or (pos=="26") or (pos=="28") or (pos=="30") or (pos=="32") or (pos=="37") or (pos=="50") or (pos=="51") or (pos=="60") or (pos== "78"):
+			drhazard = 1.11
+			pos2_list.append(pos)
+		if (pos == "13") or (pos == "26"):
+			prob = 1
+		else:
+			continue
+	return drhazard, pos2_list, prob
+
+
+def dqfibershazard(pos_list):
+	#print(locus)
+	#print(pos_list)
+	pos_list = pos_list.replace(" ","")
+	pos_list = pos_list.split(",")
+	dqhazard = 0
+	pos2_list = []
+	prob = 0
+	for pos in pos_list:
+		if (pos == "18") or (pos == "49") or (pos == "55") or (pos == "66") or (pos == "74"):
+			dqhazard = 1.07
+			pos2_list.append(pos)
+		if (pos == "30") or (pos == "55"):
+			prob = 1
+		else:
+			continue
+	return dqhazard, pos2_list, prob
+
+
+def drfibersprob(pos_list):
+	#print(locus)
+	#print(pos_list)
+	pos_list = pos_list.replace(" ","")
+	pos_list = pos_list.replace("'","")
+	pos_list = pos_list.split(",")
+	pos2_list = []
+	for pos in pos_list:
+		#print(pos,type(pos))
+		if (pos == "9") or (pos == "10") or (pos == "11") or (pos== "12") or (pos == "13") or (pos == "26") or (pos == "28") or (pos == "30"):
+			pos2_list.append(pos)
+		else:
+			continue
+	pos2_list = ', '.join(str(item) for item in pos2_list)
+	cpos = len(pos2_list)
+	if (cpos > 0):
+		prob = 1
+	else:
+		prob = 0
+	return pos2_list, prob
+
+
+def dqfibersprob(pos_list):
+	#print(locus)
+	#print(pos_list)
+	pos_list = pos_list.replace(" ","")
+	pos_list = pos_list.replace("'","")
+	pos_list = pos_list.split(",")
+	pos2_list = []
+	for pos in pos_list:
+		#print(pos,type(pos))
+		if (pos == "30") or (pos == "38") or (pos=="53") or (pos == "55") or (pos == "66") or (pos== "67") or (pos== "71") or (pos == "74") or (pos== "77") or (pos== "84") or (pos == "85") or (pos=="89") or (pos== "90"):
+			pos2_list.append(pos)
+		else:
+			continue
+	pos2_list = ', '.join(str(item) for item in pos2_list)
+	cpos = len(pos2_list)
+	if (cpos > 0):
+		prob = 1
+	else:
+		prob = 0
+	return pos2_list, prob
 
 
 

@@ -12,7 +12,7 @@
 
 <body> 
 <div class="text-center  pt-1 pb-1">
-    <h1 class="text-success jumbotron font-weight-bold">HLA Antigen to most probable Allele Tool for A,C,B,DRB1, and DQB1 Antigens</h1> 
+    <h1 class="text-success jumbotron font-weight-bold">HLA Antigen to most probable Allele Tool for DRB1 and DQB1 Antigens to be assesed for FIBERS High Risk Binning</h1> 
 </div> 
 
 <div>
@@ -20,35 +20,23 @@
 
     <p class="container jumbotron pt-4 pb-4 lead" > Enter the Race and Antigen Typing for Donor Recipient pairs to Impute most probable Alleles</p>
     <p class="container jumbotron pt-4 pb-4 lead" > Most probable Alleles for Type1 and Type2 will then be analyzed for AA mismatches and FIBERS High Risk Binning</p>
-    <form class="container text-center text-primary mt-5" action="{% url 'antigen2aa_out.html' %}" method="get">
+    <form class="container text-center text-primary mt-5" action="{% url 'DRQantigen2aa_out.html' %}" method="get">
         <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Donor </h4>
-        <textarea name = "userinput17" rows = "1" cols = "10" >CAU</textarea>
+        <textarea name = "userinput39" rows = "1" cols = "10" >CAU</textarea>
         <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 1 </h4>
-       <textarea name = "userinput18" rows = "1" cols = "10" >A3</textarea>
-       <textarea name = "userinput19" rows = "1" cols = "10" >C15</textarea>
-       <textarea name = "userinput20" rows = "1" cols = "10" >B7</textarea>
-       <textarea name = "userinput21" rows = "1" cols = "10" >DR2</textarea>
-       <textarea name = "userinput22" rows = "1" cols = "10" >DQ2</textarea>
+       <textarea name = "userinput40" rows = "1" cols = "10" >DR2</textarea>
+       <textarea name = "userinput41" rows = "1" cols = "10" >DQ2</textarea>
        <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 2 </h4>
-       <textarea name = "userinput23" rows = "1" cols = "10" >A3</textarea>
-       <textarea name = "userinput24" rows = "1" cols = "10" >C16</textarea>
-       <textarea name = "userinput25" rows = "1" cols = "10" >B5</textarea>
-       <textarea name = "userinput26" rows = "1" cols = "10" >DR2</textarea>
-       <textarea name = "userinput27" rows = "1" cols = "10" >DQ1</textarea>
+       <textarea name = "userinput42" rows = "1" cols = "10" >DR2</textarea>
+       <textarea name = "userinput43" rows = "1" cols = "10" >DQ2</textarea>
        <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Recipient </h4>
-       <textarea name = "userinput28" rows = "1" cols = "10" >AFA</textarea>
+       <textarea name = "userinput44" rows = "1" cols = "10" >AFA</textarea>
        <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 1 </h4>
-      <textarea name = "userinput29" rows = "1" cols = "10" >A3</textarea>
-      <textarea name = "userinput30" rows = "1" cols = "10" >C16</textarea>
-      <textarea name = "userinput31" rows = "1" cols = "10" >B7</textarea>
-      <textarea name = "userinput32" rows = "1" cols = "10" >DR2</textarea>
-      <textarea name = "userinput33" rows = "1" cols = "10" >DQ2</textarea>
+      <textarea name = "userinput45" rows = "1" cols = "10" >DR2</textarea>
+      <textarea name = "userinput46" rows = "1" cols = "10" >DQ2</textarea>
       <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Type 2 </h4>
-      <textarea name = "userinput34" rows = "1" cols = "10" >A1</textarea>
-      <textarea name = "userinput35" rows = "1" cols = "10" >C15</textarea>
-      <textarea name = "userinput36" rows = "1" cols = "10" >B7</textarea>
-      <textarea name = "userinput37" rows = "1" cols = "10" >DR2</textarea>
-      <textarea name = "userinput38" rows = "1" cols = "10" >DQ2</textarea>
+      <textarea name = "userinput47" rows = "1" cols = "10" >DR2</textarea>
+      <textarea name = "userinput48" rows = "1" cols = "10" >DQ2</textarea>
        <br>
        <input class="btn btn-danger btn-lg active mt-5 text-center" type="submit" value="SUBMIT"/> </div> 
     </form>
