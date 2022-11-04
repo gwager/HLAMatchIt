@@ -407,8 +407,11 @@ def antigen2HFallele(race,antigen):
 	#print("antigen2alles:", possible_alleles)
 	max_freq = max(possible_alleles.values())
 	max_allele = max(possible_alleles, key=possible_alleles.get)
+	alleles = {x:y for x,y in possible_alleles.items() if y!=0}
+	nalleles = len(alleles)
+	print("antigen:", antigen, "reduced list:", alleles, "n:", nalleles)
 	#print(max_allele, max_freq)
-	return max_allele, max_freq
+	return max_allele, max_freq, nalleles
 
 def afibershazard(pos_list):
 	#print(locus)
@@ -535,6 +538,9 @@ def dqfibersprob(pos_list):
 		prob = 0
 	return pos2_list, prob
 
+
+def freq2prob(dall1,dall2,rall1,rall2):
+	return 
 
 
 # weighted choice from https://scaron.info/blog/python-weighted-choice.html

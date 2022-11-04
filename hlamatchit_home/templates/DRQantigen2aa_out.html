@@ -28,11 +28,43 @@
   <br>
   <div class="container">
     
-  
+
+<table class="container table table-responsive-sm table-bordered table-hover table-striped  text-xl-left"> 
+            <thead class="thead-dark">
+              
+                <tr> 
+                  <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Would FIBERS Place Donor-Recipient Pair in a High Risk Bin? </h4>
+                  <th scope="col"> <h4> Prediction</h4> </th>
+                  <th scope="col"> <h4> Probability of one or more AA-MM given Frequency of DR Allele in Genetic Reference Population</h4> </th>
+                  <th scope="col"> <h4> Probability of one or more AA-MM given Frequency of DQ Allele in Genetic Reference Population</h4> </th>
+                  <th scope="col"> <h4> Average Hazard Ratio for AA MM at Associated Positions</h4> </th>
+                  <th scope="col"> <h4> FIBERS DRB1 High Risk Amino Acid Mismatched Positions</h4> </th>
+                  <th scope="col"> <h4> FIBERS DQB1 High Risk Amino Acid Mismatched Positions</h4> </th>
+
+                </tr>
+            </thead>
+            
+
+<tbody>
+  <tr>
+    <td>{{fpred}}</td>
+    <td>{{drfprob}}</td>
+    <td>{{dqfprob}}</td>
+    <td>{{fhazard}}</td>
+    <td>{{DRpos2}}</td>
+    <td>{{DQpos2}}</td>
+  </tr>
+</tbody>
+  </table>  
+</div>
+  <div class="container">
+    
+
  <table class="container table table-responsive-sm table-bordered table-hover table-striped  text-xl-left"> 
             <thead class="thead-dark">
               
                 <tr> 
+                  <h4 class=" text-danger font-weight-bold mb-3 mt-5"> DRB1 Loci </h4>
                   <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Donor </h4>
                     <th scope="col"> <h4> Race</h4> </th>
                     <th scope="col"> <h4> DR1 Antigen</h4> </th>
@@ -41,12 +73,6 @@
                     <th scope="col"> <h4> DR2 Antigen</h4> </th>
                     <th scope="col"> <h4> DR2 Allele</h4> </th>
                     <th scope="col"> <h4> DR2 Allele Frequency</h4> </th>
-                    <th scope="col"> <h4> DQ1 Antigen</h4> </th>
-                    <th scope="col"> <h4> DQ1 Allele</h4> </th>
-                    <th scope="col"> <h4> DQ1 Allele Frequency</h4> </th>
-                    <th scope="col"> <h4> DQ2 Antigen</h4> </th>
-                    <th scope="col"> <h4> DQ2 Allele</h4> </th>
-                    <th scope="col"> <h4> DQ2 Allele Frequency</h4> </th>
                 </tr>
             </thead>
            
@@ -60,6 +86,83 @@
     <td>{{dantdr2}}</td>
     <td>{{dalldr2}}</td>
     <td>{{dfdr2}}</td>
+  </tr>
+</tbody>
+ </table>  
+</div>
+<div class="container">
+  <table class="container table table-responsive-sm table-bordered table-hover table-striped  text-xl-left"> 
+            <thead class="thead-dark">
+              
+                <tr> 
+                  <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Recipient </h4>
+                    <th scope="col"> <h4> Race</h4> </th>
+                    <th scope="col"> <h4> DR1 Antigen</h4> </th>
+                    <th scope="col"> <h4> DR1 Allele</h4> </th>
+                    <th scope="col"> <h4> DR1 Allele Frequency</h4> </th>
+                    <th scope="col"> <h4> DR2 Antigen</h4> </th>
+                    <th scope="col"> <h4> DR2 Allele</h4> </th>
+                    <th scope="col"> <h4> DR2 Allele Frequency</h4> </th>
+                </tr>
+            </thead>
+ 
+
+<tbody>
+  <tr>
+    <td>{{rrace}}</td>
+    <td>{{rantdr1}}</td>
+    <td>{{ralldr1}}</td>
+    <td>{{rfdr1}}</td>
+    <td>{{rantdr2}}</td>
+    <td>{{ralldr2}}</td>
+    <td>{{rfdr2}}</td>
+  </tr>
+</tbody>
+</table>  
+</div>
+<div class="container">
+  <table class="container table table-responsive-sm table-bordered table-hover table-striped  text-xl-left"> 
+            <thead class="thead-dark">
+
+                <tr> 
+                    <h4 class=" text-danger font-weight-bold mb-3 mt-5"> DRB1 Mismatches </h4>
+                    <th scope="col"> <h4> Range</h4> </th>
+                    <th scope="col"> <h4> Total Mismatches</h4> </th>
+                    <th scope="col"> <h4> Mismatched SAAPs</h4> </th>
+                </tr>
+            </thead>
+
+
+<tbody>
+  <tr>
+    <td>{{drrange}}</td>
+    <td>{{DRcount}}</td>
+    <td>{{DRpos1}}</td>
+  </tr>
+</tbody>
+ </table>  
+</div>
+<div class="container">
+  <table class="container table table-responsive-sm table-bordered table-hover table-striped  text-xl-left"> 
+            <thead class="thead-dark">
+    
+                <tr> 
+                  <h4 class=" text-danger font-weight-bold mb-3 mt-5"> DQB1 Loci </h4>
+                  <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Donor </h4>
+                  <th scope="col"> <h4> Race</h4> </th>
+                  <th scope="col"> <h4> DQ1 Antigen</h4> </th>
+                  <th scope="col"> <h4> DQ1 Allele</h4> </th>
+                  <th scope="col"> <h4> DQ1 Allele Frequency</h4> </th>
+                  <th scope="col"> <h4> DQ2 Antigen</h4> </th>
+                  <th scope="col"> <h4> DQ2 Allele</h4> </th>
+                  <th scope="col"> <h4> DQ2 Allele Frequency</h4> </th>
+                </tr>
+            </thead>
+          
+
+<tbody>
+  <tr>
+    <td>{{drace}}</td>
     <td>{{dantdq1}}</td>
     <td>{{dalldq1}}</td>
     <td>{{dfdq1}}</td>
@@ -75,33 +178,21 @@
             <thead class="thead-dark">
     
                 <tr> 
-                  <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Recipient </h4>
-                  <th scope="col"> <h4> Race</h4> </th>
-                  <th scope="col"> <h4> DR1 Antigen</h4> </th>
-                  <th scope="col"> <h4> DR1 Allele</h4> </th>
-                  <th scope="col"> <h4> DR1 Allele Frequency</h4> </th>
-                  <th scope="col"> <h4> DR2 Antigen</h4> </th>
-                  <th scope="col"> <h4> DR2 Allele</h4> </th>
-                  <th scope="col"> <h4> DR2 Allele Frequency</h4> </th>
-                  <th scope="col"> <h4> DQ1 Antigen</h4> </th>
-                  <th scope="col"> <h4> DQ1 Allele</h4> </th>
-                  <th scope="col"> <h4> DQ1 Allele Frequency</h4> </th>
-                  <th scope="col"> <h4> DQ2 Antigen</h4> </th>
-                  <th scope="col"> <h4> DQ2 Allele</h4> </th>
-                  <th scope="col"> <h4> DQ2 Allele Frequency</h4> </th>
+                    <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Recipient </h4>
+                    <th scope="col"> <h4> Race</h4> </th>
+                    <th scope="col"> <h4> DQ1 Antigen</h4> </th>
+                    <th scope="col"> <h4> DQ1 Allele</h4> </th>
+                    <th scope="col"> <h4> DQ1 Allele Frequency</h4> </th>
+                    <th scope="col"> <h4> DQ2 Antigen</h4> </th>
+                    <th scope="col"> <h4> DQ2 Allele</h4> </th>
+                    <th scope="col"> <h4> DQ2 Allele Frequency</h4> </th>
                 </tr>
             </thead>
-          
+
 
 <tbody>
   <tr>
     <td>{{rrace}}</td>
-    <td>{{rantdr1}}</td>
-    <td>{{ralldr1}}</td>
-    <td>{{rfdr1}}</td>
-    <td>{{rantdr2}}</td>
-    <td>{{ralldr2}}</td>
-    <td>{{rfdr2}}</td>
     <td>{{rantdq1}}</td>
     <td>{{ralldq1}}</td>
     <td>{{rfdq1}}</td>
@@ -117,42 +208,10 @@
             <thead class="thead-dark">
 
                 <tr> 
-                    <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Loci DRB1 </h4>
+                    <h4 class=" text-danger font-weight-bold mb-3 mt-5"> DQB1 Mismatches </h4>
                     <th scope="col"> <h4> Range</h4> </th>
                     <th scope="col"> <h4> Total Mismatches</h4> </th>
                     <th scope="col"> <h4> Mismatched SAAPs</h4> </th>
-                    <th scope="col"> <h4> FIBERS High Hazard Positions</h4> </th>
-                    <th scope="col"> <h4> Would D|R Pair be placed in a FIBERS High Risk Bin</h4> </th>
-
-                </tr>
-            </thead>
-
-
-<tbody>
-  <tr>
-    <td>{{drrange}}</td>
-    <td>{{DRcount}}</td>
-    <td>{{DRpos1}}</td>
-    <td>{{DRpos2}}</td>
-    <td>{{drprob}}</td>
-
-  </tr>
-</tbody>
- </table>  
-</div>
-<div class="container">
-  <table class="container table table-responsive-sm table-bordered table-hover table-striped  text-xl-left"> 
-            <thead class="thead-dark">
-
-                <tr> 
-                    <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Loci DQB1 </h4>
-                    <th scope="col"> <h4> Range</h4> </th>
-                    <th scope="col"> <h4> Total Mismatches</h4> </th>
-                    <th scope="col"> <h4> Mismatched SAAPs</h4> </th>
-                    <th scope="col"> <h4> FIBERS High Hazard Positions</h4> </th>
-                    <th scope="col"> <h4> Would D|R Pair be placed in a FIBERS High Risk Bin</h4> </th>
-
-
                 </tr>
             </thead>
 
@@ -162,9 +221,6 @@
     <td>{{dqrange}}</td>
     <td>{{DQcount}}</td>
     <td>{{DQpos1}}</td>
-    <td>{{DQpos2}}</td>
-    <td>{{dqprob}}</td>
-
   </tr>
 </tbody>
  </table>  
