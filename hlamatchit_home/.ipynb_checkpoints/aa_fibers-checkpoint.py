@@ -354,6 +354,7 @@ def getAAgenostringmatch(da1, da2, ra1, ra2, locus):
 	return dstring1, dstring2, rstring1, rstring2, mm_count, pos_list, pos1_list, end_position
 
 def getAAgenostringmatchE(da1, da2, ra1, ra2, locus, dprob, rprob):
+	print("start")
 	start_position = ard_start_pos[locus]
 	end_position = ard_end_pos[locus]
 	dstring1 = HLA_seq[da1].seq[start_position-1:end_position]
@@ -370,7 +371,8 @@ def getAAgenostringmatchE(da1, da2, ra1, ra2, locus, dprob, rprob):
 	start_position = int(start_position)
 	end_position = int(end_position)
 	for pos in range(start_position,end_position):
-		if (pos == 9) or (pos == 10) or (pos == 11) or (pos== 12) or (pos == 13) or (pos == 26) or (pos == 28) or (pos == 30):
+		print(pos)
+		if (pos == 9) or (pos == "10") or (pos == "11") or (pos== "12") or (pos == "13") or (pos == "26") or (pos == "28") or (pos == "30"):
 			daa1 = dstring1[pos-1]
 			daa2 = dstring2[pos-1]
 			raa1 = rstring1[pos-1]
@@ -386,11 +388,11 @@ def getAAgenostringmatchE(da1, da2, ra1, ra2, locus, dprob, rprob):
 			if(raa == daa):
 				print("getAAgenostringmatchE AA-MM:", pos, raa,"+",daa)
 				prob = 1-((rprob + dprob)/2)
-				print("Probability,1-(rprob+dprob/2), of AA-MM given matching assignments for the most probable genotypes:", prob)
+				print("Probability of AA-MM given matching assignments for the most probable genotypes:", prob)
 			else:
 				print("getAAgenostringmatchE AA-MM:", pos, raa,"+",daa)
 				prob = (rprob + dprob)/2
-				print("Probability, rprob+dprob/2, of AA-MM given mismatching assignments for the most probable genotypes:", prob)
+				print("Probability of AA-MM given mismatching assignments for the most probable genotypes:", prob)
 				mm_count+=1
 				pos_list.append(pos)
 				pos1_list.append(pos)

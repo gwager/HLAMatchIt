@@ -88,7 +88,7 @@ def DRQantigen2aa_out(request):
 
 
         else:
-            dqfprob = 0
+            drprob = 0
 
         if (dqprob > 0):
             ddq1 = dfdq1/ddq1sumant
