@@ -2,9 +2,7 @@ import sys
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-from .aa_matching import getAAposition
-from .aa_matching import isPositionMismatched
-from .aa_matching import count_AA_Mismatches
+from .aa_fibers import count_AA_Mismatches
 
 
 # Create your views here.

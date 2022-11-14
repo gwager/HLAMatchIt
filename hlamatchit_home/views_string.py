@@ -3,7 +3,7 @@ from tracemalloc import start
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-from .aa_matching import getAAsubstring
+from .aa_fibers import getAAsubstring
 
 
 # Create your views here.

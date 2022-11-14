@@ -3,9 +3,7 @@ from tracemalloc import start
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-from .aa_matching import getAAposition
-from .aa_matching import isPositionMismatched
-from .aa_fibers import antigen2HFallele,getAAgenostringmatch, drfibersprob, dqfibersprob
+from .aa_fibers import antigen2HFalleleFIBERS, getAAgenostringmatchFIBERS, drfibersprob, dqfibersprob, getAAgenostringmatch
 
 
 # Create your views here.
@@ -34,83 +32,42 @@ def DRQantigen2aa_out(request):
 
     #get Donor most prob alleles
 
-    dalldr1,dfdr1,dnalldr1, ddr1sumant,ddr1allelefreqs = antigen2HFallele(drace,dantdr1)
-    dalldr2,dfdr2,dnalldr2, ddr2sumant,ddr2allelefreqs = antigen2HFallele(drace,dantdr2)
+    dalldr1,dfdr1,dnalldr1, ddr1sumant, ddr1alleles= antigen2HFalleleFIBERS(drace,dantdr1)
+    dalldr2,dfdr2,dnalldr2, ddr2sumant, ddr2alleles= antigen2HFalleleFIBERS(drace,dantdr2)
 
-    dalldq1,dfdq1,dnalldq1, ddq1sumant, ddq1allelefreqs = antigen2HFallele(drace,dantdq1)
-    dalldq2,dfdq2,dnalldq2, ddq2sumant, ddq2allelefreqs = antigen2HFallele(drace,dantdq2)
+    dalldq1,dfdq1,dnalldq1, ddq1sumant, ddq1alleles= antigen2HFalleleFIBERS(drace,dantdq1)
+    dalldq2,dfdq2,dnalldq2, ddq2sumant, ddq2alleles= antigen2HFalleleFIBERS(drace,dantdq2)
 
 
     #get Recipient most prob alleles
 
-    ralldr1,rfdr1,rnalldr1, rdr1sumant,rdr1allelefreqs = antigen2HFallele(rrace,rantdr1)
-    ralldr2,rfdr2,rnalldr2, rdr2sumant,rdr2allelefreqs = antigen2HFallele(rrace,rantdr2)
+    ralldr1,rfdr1,rnalldr1, rdr1sumant, rdr1alleles= antigen2HFalleleFIBERS(rrace,rantdr1)
+    ralldr2,rfdr2,rnalldr2, rdr2sumant, rdr2alleles = antigen2HFalleleFIBERS(rrace,rantdr2)
 
-    ralldq1,rfdq1,rnalldq1, rdq1sumant,rdq1allelefreqs = antigen2HFallele(rrace,rantdq1)
-    ralldq2,rfdq2,rnalldq2, rdq2sumant,rdq2allelefreqs= antigen2HFallele(rrace,rantdq2)
+    ralldq1,rfdq1,rnalldq1, rdq1sumant,rdq1alleles = antigen2HFalleleFIBERS(rrace,rantdq1)
+    ralldq2,rfdq2,rnalldq2, rdq2sumant, rdq2alleles= antigen2HFalleleFIBERS(rrace,rantdq2)
 
+    print("Got alleles")
+
+    drfprob = getAAgenostringmatchFIBERS(ddr1alleles,ddr2alleles, rdr1alleles, rdr2alleles, drloc,ddr1sumant,ddr2sumant,rdr1sumant,rdr2sumant)
+    dqfprob = getAAgenostringmatchFIBERS(ddq1alleles,ddq2alleles,rdq1alleles,rdq2alleles, dqloc,ddq1sumant,ddq2sumant,rdq1sumant,rdq2sumant)
 
     dDRa1,dDRa2,rDRa1,rDRa2,DRcount,DRpos,DRpos1,DRend_pos = getAAgenostringmatch(dalldr1,dalldr2,ralldr1,ralldr2, drloc)
     dDQa1,dDQa2,rDQa1,rDQa2,DQcount,DQpos,DQpos1,DQend_pos = getAAgenostringmatch(dalldq1,dalldq2,ralldq1,ralldq2, dqloc)
+
+    DRpos2, drprob = drfibersprob(DRpos)
+    DQpos2, dqprob = dqfibersprob(DQpos)
 
 
     drrange = DRend_pos
     dqrange = DQend_pos
 
-
-    DRpos2, drprob = drfibersprob(DRpos)
-    DQpos2, dqprob = dqfibersprob(DQpos)
     #fprob = fibersprobability(locus, pos)
     prob = dqprob + drprob
 
     if (prob >0):
         fpred = "Yes"
         fhazard = 1.10
-
-        if (drprob > 0):
-            ddr1 = dfdr1/ddr1sumant
-            ddr2 = dfdr2/ddr2sumant
-            ddr = ddr1 + ddr2
-            ddrprob = ddr/2
-
-
-            rdr1 = rfdr1/rdr1sumant
-            rdr2 = rfdr2/rdr2sumant
-            rdr = rdr1 + rdr2
-            rdrprob = rdr/2
-            print("prob of R:", rdrprob)
-            print("prob of D:", ddrprob)
-
-            drprob = ddrprob + rdrprob
-            drfprob = drprob/2
-            print("prob of DR:", drfprob)
-
-
-
-        else:
-            drprob = 0
-
-        if (dqprob > 0):
-            ddq1 = dfdq1/ddq1sumant
-            ddq2 = dfdq2/ddq2sumant
-            ddq = ddq1 + ddq2
-            ddqprob = ddq/2
-
-
-            rdq1 = rfdq1/rdq1sumant
-            rdq2 = rfdq2/rdq2sumant
-            rdq = rdq1 + rdq2
-            rdqprob = rdq/2
-            print("prob of R:", rdqprob)
-            print("prob of D:", ddqprob)
-
-            dqprob = ddqprob + rdqprob
-            dqfprob = dqprob/2
-            print("prob of DR:", dqfprob)
-            
-
-        else:
-            dqfprob = 0
     else:
         fpred = "No"
 

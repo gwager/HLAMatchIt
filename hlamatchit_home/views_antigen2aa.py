@@ -3,8 +3,6 @@ from tracemalloc import start
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-from .aa_matching import getAAposition
-from .aa_matching import isPositionMismatched
 from .aa_fibers import antigen2HFallele,getAAgenostringmatch, afibershazard, cfibershazard, bfibershazard, drfibershazard, dqfibershazard
 
 

@@ -13,11 +13,12 @@ import Bio
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
 import pandas as pd
 import random
-#from "./AminoAcidMatching/aa_matching_msf" import *
-#aa_mm = AAMatch(dbversion=3420)
+from .aa_matching_msf import *
+aa_mm = AAMatch(dbversion=3500)
+import re
+
 
 
 
@@ -114,41 +115,6 @@ def freqfileselect(race):
 	return freqs_filename
 
 # load protein sequence file to get full protein sequences into SeqRecord file
-seq_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/IMGT_HLA_Full_Protein_3330.txt"
-seqfile = open(seq_filename, "r")
-
-HLA_full_allele = {} # Full four-field allele names
-HLA_seq = {} # Two-field
-for line in seqfile:
-	(allele,full_protein) = line.split("\t")
-	if allele == "Allele":
-		continue
-
-	# skip missing sequences in IMGT/HLA file
-	if (len(full_protein) <10): # #NAME?
-		print ("Missing Sequence:" + allele)
-		continue
-
-	(imgt_loc,full_allele) = allele.split("*")
-	(gene,loc) = imgt_loc.split('-')
-	mature_protein = full_protein[getMatureProteinOffset(loc):]
-	# print (allele + " " + mature_protein)
-	loc_full_allele = loc + "*" + full_allele
-
-	allele_fields = full_allele.split(':')
-	two_field_allele = allele_fields[0] + ":" + allele_fields[1]
-	loc_two_field_allele = loc + "*" + two_field_allele
-
-	record = SeqRecord(Seq(mature_protein,IUPAC.protein), mature_protein, '','')
-	# print (record)
-
-	# full allele name
-	HLA_full_allele[loc_full_allele] = record
-
-	# don't overwrite two-field alleles with new sequences - more likely to be incomplete
-	if (loc_two_field_allele not in HLA_seq):
-		HLA_seq[loc_two_field_allele] = record
-
 	# print (HLA_seqrecord_dict[allele])
 	
 	# TODO - add feature annotation to SeqIO object
@@ -165,14 +131,14 @@ for line in seqfile:
 def getAAsubstring(allele,start_position,end_position):
 	start_position = int(start_position)
 	end_position = int(end_position)
-	string = HLA_seq[allele].seq[start_position-1:end_position]
-	return HLA_seq[allele].seq[start_position-1:end_position]
+	string = aa_mm.HLA_seq[allele].seq[start_position-1:end_position]
+	return aa_mm.HLA_seq[allele].seq[start_position-1:end_position]
 
 # get the AA at any position of any HLA allele
 def getAAposition(allele,position):
 	position = int(position)
-	AA = HLA_seq[allele].seq[position-1]
-	return HLA_seq[allele].seq[position-1]
+	AA = aa_mm.HLA_seq[allele].seq[position-1]
+	return aa_mm.HLA_seq[allele].seq[position-1]
 
 # get the SFVT epitope name (with underscore)
 def getEpitope(allele,position_list):
@@ -266,12 +232,15 @@ def AA_MM_Allele(allele1_donor,allele2_donor,allele1_recip,allele2_recip,positio
 	return is_mm
 
 
+
+
 #new function to get AA string mismatches from alleles
+
 def getAAstringmatch(allele1, allele2, locus):
 	start_position = ard_start_pos[locus]
 	end_position = ard_end_pos[locus]
-	string1 = HLA_seq[allele1].seq[start_position-1:end_position]
-	string2 = HLA_seq[allele2].seq[start_position-1:end_position]
+	string1 = aa_mm.HLA_seq[allele1].seq[start_position-1:end_position]
+	string2 = aa_mm.HLA_seq[allele2].seq[start_position-1:end_position]
 	mm_count = 0
 	pos_list = []
 	pos1_list = []
@@ -303,15 +272,18 @@ def getAAstringmatch(allele1, allele2, locus):
 	end_position = int(end_position)
 	return string1, string2, mm_count, pos_list, pos1_list, pos2_list, end_position
 
+
+
+
 #definitions to generate desired webtool
 
 def getAAgenostringmatch(da1, da2, ra1, ra2, locus):
 	start_position = ard_start_pos[locus]
 	end_position = ard_end_pos[locus]
-	dstring1 = HLA_seq[da1].seq[start_position-1:end_position]
-	dstring2 = HLA_seq[da2].seq[start_position-1:end_position]
-	rstring1 = HLA_seq[ra1].seq[start_position-1:end_position]
-	rstring2 = HLA_seq[ra2].seq[start_position-1:end_position]
+	dstring1 = aa_mm.HLA_seq[da1].seq[start_position-1:end_position]
+	dstring2 = aa_mm.HLA_seq[da2].seq[start_position-1:end_position]
+	rstring1 = aa_mm.HLA_seq[ra1].seq[start_position-1:end_position]
+	rstring2 = aa_mm.HLA_seq[ra2].seq[start_position-1:end_position]
 	mm_count = 0
 	pos_list = []
 	pos1_list = []
@@ -353,61 +325,8 @@ def getAAgenostringmatch(da1, da2, ra1, ra2, locus):
 	end_position = int(end_position)
 	return dstring1, dstring2, rstring1, rstring2, mm_count, pos_list, pos1_list, end_position
 
-def getAAgenostringmatchE(da1, da2, ra1, ra2, locus, dprob, rprob):
-	start_position = ard_start_pos[locus]
-	end_position = ard_end_pos[locus]
-	dstring1 = HLA_seq[da1].seq[start_position-1:end_position]
-	dstring2 = HLA_seq[da2].seq[start_position-1:end_position]
-	rstring1 = HLA_seq[ra1].seq[start_position-1:end_position]
-	rstring2 = HLA_seq[ra2].seq[start_position-1:end_position]
-	mm_count = 0
-	pos_list = []
-	pos1_list = []
-	dstring1 = str(dstring1)
-	dstring2 = str(dstring2)
-	rstring1 = str(rstring1)
-	rstring2 = str(rstring2)
-	start_position = int(start_position)
-	end_position = int(end_position)
-	for pos in range(start_position,end_position):
-		if (pos == 9) or (pos == 10) or (pos == 11) or (pos== 12) or (pos == 13) or (pos == 26) or (pos == 28) or (pos == 30):
-			daa1 = dstring1[pos-1]
-			daa2 = dstring2[pos-1]
-			raa1 = rstring1[pos-1]
-			raa2 = rstring2[pos-1]
-			daa = daa1 + daa2
-			#print(daa)
-			daa = (daa)
-			daa = ''.join(sorted(daa, key=str.lower))
-			#print(daa)
-			raa = raa1 + raa2
-			raa = ''.join(sorted(raa, key=str.lower))
-			#print(raa , daa)
-			if(raa == daa):
-				print("getAAgenostringmatchE AA-MM:", pos, raa,"+",daa)
-				prob = 1-((rprob + dprob)/2)
-				print("Probability,1-(rprob+dprob/2), of AA-MM given matching assignments for the most probable genotypes:", prob)
-			else:
-				print("getAAgenostringmatchE AA-MM:", pos, raa,"+",daa)
-				prob = (rprob + dprob)/2
-				print("Probability, rprob+dprob/2, of AA-MM given mismatching assignments for the most probable genotypes:", prob)
-				mm_count+=1
-				pos_list.append(pos)
-				pos1_list.append(pos)
-				combo = daa + "|" + raa
-				pos1_list.append(combo)
-		else:
-			continue
 
-	dstring1 = str(dstring1)
-	dstring2 = str(dstring2)
-	rstring1 = str(rstring1)
-	rstring2 = str(rstring2)
-	pos_list = ', '.join(str(item) for item in pos_list)
-	pos1_list = ', '.join(str(item) for item in pos1_list)
-	start_position = int(start_position)
-	end_position = int(end_position)
-	return dstring1, dstring2, rstring1, rstring2, mm_count, pos_list, pos1_list, end_position
+
 
 def highfreq(race, allele):
 	freqs_filename = "/Users/gracelord/dev/hlamatchit/hlamatchit_home/freqs_9loc_2020_trim/freqs." +race + ".csv"
@@ -425,6 +344,8 @@ def highfreq(race, allele):
 			possible_string_value += freq
 
 	return possible_string_value
+
+
 
 #utilized code from https://github.com/lgragert/unos-cpra-calculator/blob/main/unos/cpra/cpra2022_nonARD_lib.py
 def antigen2allele(antigen):
@@ -449,6 +370,9 @@ def antigen2allele(antigen):
 	#print(alleles)
 	return alleles
 
+
+
+
 def antigen2HFallele(race,antigen):
 	alleles = antigen2allele(antigen)
 	possible_alleles = defaultdict(dict)
@@ -465,15 +389,13 @@ def antigen2HFallele(race,antigen):
 	alleles = {x:y for x,y in possible_alleles.items() if y!=0}
 	nalleles = len(alleles)
 	sumant =sum(possible_alleles.values())
-	allelefreqs = probcheck(alleles, sumant)
 	#print(allelefreqs)
-	return max_allele, max_freq, nalleles, sumant, allelefreqs
+	return max_allele, max_freq, nalleles, sumant
 
-def antigen2HFalleleE(race,antigen):
+
+
+def antigen2HFalleleFIBERS(race,antigen):
 	alleles = antigen2allele(antigen)
-	print( "Race:", race, "antigen:", antigen)
-	print("Alleles from OPTN selected by antigen2allele function:", alleles)
-	#print(alleles)
 	possible_alleles = defaultdict(dict)
 	for allele in alleles:
 		#print(allele)
@@ -488,24 +410,9 @@ def antigen2HFalleleE(race,antigen):
 	alleles = {x:y for x,y in possible_alleles.items() if y!=0}
 	nalleles = len(alleles)
 	sumant =sum(possible_alleles.values())
-	print("Only Alleles with frequency in Genetic Reference Population:", alleles)
-	print("Sum of Allele Frequencies for Probability Calcs:", sumant)
-	print( "Most probable Allele and its Frequency:", max_allele, max_freq)
-	allelefreqs = probcheck(alleles, sumant)
-	print("Prob check function calculating Allele level Probs using AlleleFreq/AntigenFreq for every possible Allele:", allelefreqs)
-	prob = max_freq/sumant
-	print("Most Probable Alleles Probability:", prob)
-	return max_allele, max_freq, nalleles, sumant, allelefreqs, prob
+	#print(allelefreqs)
+	return max_allele, max_freq, nalleles, sumant, alleles
 
-
-def probcheck(possible_alleles,sumant):
-	probs= []
-	for allele in possible_alleles:
-		probs.append(allele)
-		freq = possible_alleles.get(allele)
-		prob = freq/sumant
-		probs.append(prob)
-	return probs
 
 
 def afibershazard(pos_list):
@@ -522,6 +429,9 @@ def afibershazard(pos_list):
 	pos2_list = ', '.join(str(item) for item in pos2_list)
 	return ahazard, pos2_list
 
+
+
+
 def cfibershazard(pos_list):
 #print(locus)
 #print(pos_list)
@@ -537,6 +447,8 @@ def cfibershazard(pos_list):
 	return chazard, pos2_list
 
 
+
+
 def bfibershazard(pos_list):
 #print(locus)
 #print(pos_list)
@@ -550,6 +462,7 @@ def bfibershazard(pos_list):
 			pos2_list.append(pos)
 	pos2_list = ', '.join(str(item) for item in pos2_list)
 	return bhazard, pos2_list
+
 
 
 def drfibershazard(pos_list):
@@ -635,6 +548,232 @@ def dqfibersprob(pos_list):
 	return pos2_list, prob
 
 
+def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus,d1sumant,d2sumant,r1sumant,r2sumant):
+	probs = defaultdict(dict)
+	geno_list = defaultdict(dict)
+	for da1 in dalleles1:
+		for da2 in dalleles2:
+			for ra1 in ralleles1:
+				for ra2 in ralleles2:
+					da = (da1)+ '+' + (da2)
+					#print(daa)
+					#da = '+'.join(sorted(da, key=str.lower))
+					#print(daa)
+					ra = (ra1) + '+' + (ra2)
+					#a = '+'.join(sorted(ra, key=str.lower))
+					combo = (da) + '|' + (ra)
+					#print("combo:",combo)
+					start_position = ard_start_pos[locus]
+					end_position = ard_end_pos[locus]
+					dstring1 = aa_mm.HLA_seq[da1].seq[start_position-1:end_position]
+					dstring2 = aa_mm.HLA_seq[da2].seq[start_position-1:end_position]
+					rstring1 = aa_mm.HLA_seq[ra1].seq[start_position-1:end_position]
+					rstring2 = aa_mm.HLA_seq[ra2].seq[start_position-1:end_position]
+					dstring1 = str(dstring1)
+					dstring2 = str(dstring2)
+					rstring1 = str(rstring1)
+					rstring2 = str(rstring2)
+					start_position = int(start_position)
+					end_position = int(end_position)
+					for pos in range(start_position,end_position):
+						#print(pos)
+						if (locus  == "DQB1"):
+							if (pos == 30) or (pos == 38) or (pos==53) or (pos == 55) or (pos == 66) or (pos== 67) or (pos== 71) or (pos == 74) or (pos== 77) or (pos== 84) or (pos == 85) or (pos==89) or (pos== 90):
+								daa1 = dstring1[pos-1]
+								daa2 = dstring2[pos-1]
+								raa1 = rstring1[pos-1]
+								raa2 = rstring2[pos-1]
+								daa = daa1 + daa2
+								#print(daa)
+								daa = ''.join(sorted(daa, key=str.lower))
+								#print(daa)
+								raa = raa1 + raa2
+								raa = ''.join(sorted(raa, key=str.lower))
+								#print(raa , daa)
+								if(raa == daa):
+									continue
+								else:
+									df1 = dalleles1.get(da1)
+									df2 = dalleles2.get(da2)
+									#ddr1 = df1/d1sumant
+									#ddr2 = df2/d2sumant
+									#ddr = ddr1 + ddr2
+									#ddrprob = ddr/2
+
+									rf1 = ralleles1.get(ra1)
+									rf2 = ralleles2.get(ra2)
+									#rdr1 = rf1/r1sumant
+									#rdr2 = rf2/r2sumant
+
+									#rdr = rdr1 + rdr2
+									#rdrprob = rdr/2
+
+									#drprob = ddrprob + rdrprob
+									#dfprob = drprob/2
+									dfprob = df1 +df2 +rf1 +rf2
+
+									if combo not in probs:
+										probs[combo]=dfprob
+									else:
+										continue
+						else:
+							if (pos == 9) or (pos == 10) or (pos == 11) or (pos== 12) or (pos == 13) or (pos == 26) or (pos == 28) or (pos == 30):
+								daa1 = dstring1[pos-1]
+								daa2 = dstring2[pos-1]
+								raa1 = rstring1[pos-1]
+								raa2 = rstring2[pos-1]
+								daa = daa1 + daa2
+								#print(daa)
+								daa = ''.join(sorted(daa, key=str.lower))
+								#print(daa)
+								raa = raa1 + raa2
+								raa = ''.join(sorted(raa, key=str.lower))
+								#print(raa , daa)
+								if(raa == daa):
+									continue
+								else:
+									df1 = dalleles1.get(da1)
+									#print(df1)
+									df2 = dalleles2.get(da2)
+									#ddr1 = df1/d1sumant
+									#ddr2 = df2/d2sumant
+									#ddr = ddr1 + ddr2
+									#ddrprob = ddr/2
+
+									rf1 = ralleles1.get(ra1)
+									rf2 = ralleles2.get(ra2)
+									#rdr1 = rf1/r1sumant
+									#rdr2 = rf2/r2sumant
+
+									#rdr = rdr1 + rdr2
+									#rdrprob = rdr/2
+
+
+									#drprob = ddrprob + rdrprob
+									#dfprob = drprob/2
+									#print(dfprob)
+									dfprob = df1 +df2 +rf1 +rf2
+
+									if combo not in probs:
+										probs[combo]=dfprob
+										#print(probs)
+									else:
+										continue
+				else:
+					continue
+			
+	dsumant = d1sumant + d2sumant
+	rsumant = r1sumant + r2sumant
+	rdsumant = dsumant + rsumant
+	sumpossible =sum(probs.values())
+	nprobs = len(probs)
+	print(nprobs)
+	sumant= rdsumant*nprobs
+	print(sumant)
+	print(sumpossible)
+	#mm_prob = sumpossible/nprobs
+	mm_prob = sumpossible/sumant
+	print(mm_prob)
+
+	return mm_prob
+
+
+#functions for enumarating probs as shown in DRDQFIBERS.ipynb
+
+def antigen2HFalleleE(race,antigen):
+	alleles = antigen2allele(antigen)
+	print( "Race:", race, "antigen:", antigen)
+	print("Alleles from OPTN selected by antigen2allele function:", alleles)
+	#print(alleles)
+	possible_alleles = defaultdict(dict)
+	for allele in alleles:
+		#print(allele)
+		possible = highfreq(race,allele)
+		if allele not in possible_alleles:
+			possible_alleles[allele]=possible
+		else:
+			continue
+	#print("Possible Alleles with Population Frequencies from NMDP selected by highfreq function:", possible_alleles)
+	max_freq = max(possible_alleles.values())
+	max_allele = max(possible_alleles, key=possible_alleles.get)
+	alleles = {x:y for x,y in possible_alleles.items() if y!=0}
+	nalleles = len(alleles)
+	sumant =sum(possible_alleles.values())
+	print("Only Alleles with frequency in Genetic Reference Population:", alleles)
+	print("Sum of Allele Frequencies for Probability Calcs:", sumant)
+	print( "Most probable Allele and its Frequency:", max_allele, max_freq)
+	allelefreqs = probcheck(alleles, sumant)
+	print("Prob check function calculating Allele level Probs using AlleleFreq/AntigenFreq for every possible Allele:", allelefreqs)
+	prob = max_freq/sumant
+	print("Most Probable Alleles Probability:", prob)
+	return max_allele, max_freq, nalleles, sumant, allelefreqs, prob
+
+
+def probcheck(possible_alleles,sumant):
+	probs= []
+	for allele in possible_alleles:
+		probs.append(allele)
+		freq = possible_alleles.get(allele)
+		prob = freq/sumant
+		probs.append(prob)
+	return probs
+
+
+def getAAgenostringmatchE(da1, da2, ra1, ra2, locus, dprob, rprob):
+	start_position = ard_start_pos[locus]
+	end_position = ard_end_pos[locus]
+	dstring1 = aa_mm.HLA_seq[da1].seq[start_position-1:end_position]
+	dstring2 = aa_mm.HLA_seq[da2].seq[start_position-1:end_position]
+	rstring1 = aa_mm.HLA_seq[ra1].seq[start_position-1:end_position]
+	rstring2 = aa_mm.HLA_seq[ra2].seq[start_position-1:end_position]
+	mm_count = 0
+	pos_list = []
+	pos1_list = []
+	dstring1 = str(dstring1)
+	dstring2 = str(dstring2)
+	rstring1 = str(rstring1)
+	rstring2 = str(rstring2)
+	start_position = int(start_position)
+	end_position = int(end_position)
+	for pos in range(start_position,end_position):
+		if (pos == 9) or (pos == 10) or (pos == 11) or (pos== 12) or (pos == 13) or (pos == 26) or (pos == 28) or (pos == 30):
+			daa1 = dstring1[pos-1]
+			daa2 = dstring2[pos-1]
+			raa1 = rstring1[pos-1]
+			raa2 = rstring2[pos-1]
+			daa = daa1 + daa2
+			#print(daa)
+			daa = (daa)
+			daa = ''.join(sorted(daa, key=str.lower))
+			#print(daa)
+			raa = raa1 + raa2
+			raa = ''.join(sorted(raa, key=str.lower))
+			#print(raa , daa)
+			if(raa == daa):
+				print("getAAgenostringmatchE AA-MM:", pos, raa,"+",daa)
+				prob = 1-((rprob + dprob)/2)
+				print("Probability,1-(rprob+dprob/2), of AA-MM given matching assignments for the most probable genotypes:", prob)
+			else:
+				print("getAAgenostringmatchE AA-MM:", pos, raa,"+",daa)
+				prob = (rprob + dprob)/2
+				print("Probability, rprob+dprob/2, of AA-MM given mismatching assignments for the most probable genotypes:", prob)
+				mm_count+=1
+				pos_list.append(pos)
+				pos1_list.append(pos)
+				combo = daa + "|" + raa
+				pos1_list.append(combo)
+		else:
+			continue
+
+	dstring1 = str(dstring1)
+	dstring2 = str(dstring2)
+	rstring1 = str(rstring1)
+	rstring2 = str(rstring2)
+	pos_list = ', '.join(str(item) for item in pos_list)
+	pos1_list = ', '.join(str(item) for item in pos1_list)
+	start_position = int(start_position)
+	end_position = int(end_position)
+	return dstring1, dstring2, rstring1, rstring2, mm_count, pos_list, pos1_list, end_position
 
 # weighted choice from https://scaron.info/blog/python-weighted-choice.html
 def weighted_choice(seq, weights):
