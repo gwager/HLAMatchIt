@@ -548,7 +548,7 @@ def dqfibersprob(pos_list):
 	return pos2_list, prob
 
 
-def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus,d1sumant,d2sumant,r1sumant,r2sumant):
+def getAAgenostringmatchFIBERSDQ(dalleles1, dalleles2, ralleles1, ralleles2, locus):
 	probs = defaultdict(dict)
 	geno_list = defaultdict(dict)
 	for da1 in dalleles1:
@@ -563,6 +563,25 @@ def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus
 					#a = '+'.join(sorted(ra, key=str.lower))
 					combo = (da) + '|' + (ra)
 					#print("combo:",combo)
+					df1 = dalleles1.get(da1)
+					df2 = dalleles2.get(da2)
+					#ddr1 = df1/d1sumant
+					#ddr2 = df2/d2sumant
+					#ddr = ddr1 + ddr2
+					#ddrprob = ddr/2
+
+					rf1 = ralleles1.get(ra1)
+					rf2 = ralleles2.get(ra2)
+					#rdr1 = rf1/r1sumant
+					#rdr2 = rf2/r2sumant
+
+					#rdr = rdr1 + rdr2
+					#rdrprob = rdr/2
+
+					#drprob = ddrprob + rdrprob
+					#dfprob = drprob/2
+					dfprob = df1 +df2 +rf1 +rf2
+					geno_list[combo] = dfprob
 					start_position = ard_start_pos[locus]
 					end_position = ard_end_pos[locus]
 					dstring1 = aa_mm.HLA_seq[da1].seq[start_position-1:end_position]
@@ -577,102 +596,123 @@ def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus
 					end_position = int(end_position)
 					for pos in range(start_position,end_position):
 						#print(pos)
-						if (locus  == "DQB1"):
-							if (pos == 30) or (pos == 38) or (pos==53) or (pos == 55) or (pos == 66) or (pos== 67) or (pos== 71) or (pos == 74) or (pos== 77) or (pos== 84) or (pos == 85) or (pos==89) or (pos== 90):
-								daa1 = dstring1[pos-1]
-								daa2 = dstring2[pos-1]
-								raa1 = rstring1[pos-1]
-								raa2 = rstring2[pos-1]
-								daa = daa1 + daa2
-								#print(daa)
-								daa = ''.join(sorted(daa, key=str.lower))
-								#print(daa)
-								raa = raa1 + raa2
-								raa = ''.join(sorted(raa, key=str.lower))
-								#print(raa , daa)
-								if(raa == daa):
-									continue
+						if (pos == 30) or (pos == 38) or (pos==53) or (pos == 55) or (pos == 66) or (pos== 67) or (pos== 71) or (pos == 74) or (pos== 77) or (pos== 84) or (pos == 85) or (pos==89) or (pos== 90):
+							daa1 = dstring1[pos-1]
+							daa2 = dstring2[pos-1]
+							raa1 = rstring1[pos-1]
+							raa2 = rstring2[pos-1]
+							daa = daa1 + daa2
+							#print(daa)
+							daa = ''.join(sorted(daa, key=str.lower))
+							#print(daa)
+							raa = raa1 + raa2
+							raa = ''.join(sorted(raa, key=str.lower))
+							if(raa == daa):
+								continue
+							else:
+								if combo not in probs:
+									probs[combo]=dfprob
 								else:
-									df1 = dalleles1.get(da1)
-									df2 = dalleles2.get(da2)
-									#ddr1 = df1/d1sumant
-									#ddr2 = df2/d2sumant
-									#ddr = ddr1 + ddr2
-									#ddrprob = ddr/2
-
-									rf1 = ralleles1.get(ra1)
-									rf2 = ralleles2.get(ra2)
-									#rdr1 = rf1/r1sumant
-									#rdr2 = rf2/r2sumant
-
-									#rdr = rdr1 + rdr2
-									#rdrprob = rdr/2
-
-									#drprob = ddrprob + rdrprob
-									#dfprob = drprob/2
-									dfprob = df1 +df2 +rf1 +rf2
-
-									if combo not in probs:
-										probs[combo]=dfprob
-									else:
-										continue
+									continue
 						else:
-							if (pos == 9) or (pos == 10) or (pos == 11) or (pos== 12) or (pos == 13) or (pos == 26) or (pos == 28) or (pos == 30):
-								daa1 = dstring1[pos-1]
-								daa2 = dstring2[pos-1]
-								raa1 = rstring1[pos-1]
-								raa2 = rstring2[pos-1]
-								daa = daa1 + daa2
-								#print(daa)
-								daa = ''.join(sorted(daa, key=str.lower))
-								#print(daa)
-								raa = raa1 + raa2
-								raa = ''.join(sorted(raa, key=str.lower))
-								#print(raa , daa)
-								if(raa == daa):
-									continue
-								else:
-									df1 = dalleles1.get(da1)
-									#print(df1)
-									df2 = dalleles2.get(da2)
-									#ddr1 = df1/d1sumant
-									#ddr2 = df2/d2sumant
-									#ddr = ddr1 + ddr2
-									#ddrprob = ddr/2
+							continue
 
-									rf1 = ralleles1.get(ra1)
-									rf2 = ralleles2.get(ra2)
-									#rdr1 = rf1/r1sumant
-									#rdr2 = rf2/r2sumant
-
-									#rdr = rdr1 + rdr2
-									#rdrprob = rdr/2
-
-
-									#drprob = ddrprob + rdrprob
-									#dfprob = drprob/2
-									#print(dfprob)
-									dfprob = df1 +df2 +rf1 +rf2
-
-									if combo not in probs:
-										probs[combo]=dfprob
-										#print(probs)
-									else:
-										continue
-				else:
-					continue
-			
-	dsumant = d1sumant + d2sumant
-	rsumant = r1sumant + r2sumant
-	rdsumant = dsumant + rsumant
+	sumgeno = sum(geno_list.values())
 	sumpossible =sum(probs.values())
-	nprobs = len(probs)
-	print(nprobs)
-	sumant= rdsumant*nprobs
-	print(sumant)
+	#nprobs = len(probs)
+	#print(nprobs)
+	#sumant= rdsumant*nprobs
+	#print(sumant)
+	#print(sumpossible)
+	#mm_prob = sumpossible/nprobs
+	mm_prob = sumpossible/sumgeno
+	print(mm_prob)
+
+	return mm_prob
+
+
+def getAAgenostringmatchFIBERSDR(dalleles1, dalleles2, ralleles1, ralleles2, locus):
+	probs = defaultdict(dict)
+	geno_list = defaultdict(dict)
+	for da1 in dalleles1:
+		for da2 in dalleles2:
+			for ra1 in ralleles1:
+				for ra2 in ralleles2:
+					da = (da1)+ '+' + (da2)
+					#print(daa)
+					#da = '+'.join(sorted(da, key=str.lower))
+					#print(daa)
+					ra = (ra1) + '+' + (ra2)
+					#a = '+'.join(sorted(ra, key=str.lower))
+					combo = (da) + '|' + (ra)
+					#print("combo:",combo)
+					df1 = dalleles1.get(da1)
+					df2 = dalleles2.get(da2)
+					#ddr1 = df1/d1sumant
+					#ddr2 = df2/d2sumant
+					#ddr = ddr1 + ddr2
+					#ddrprob = ddr/2
+
+					rf1 = ralleles1.get(ra1)
+					rf2 = ralleles2.get(ra2)
+					#rdr1 = rf1/r1sumant
+					#rdr2 = rf2/r2sumant
+
+					#rdr = rdr1 + rdr2
+					#rdrprob = rdr/2
+
+					#drprob = ddrprob + rdrprob
+					#dfprob = drprob/2
+					dfprob = df1 +df2 +rf1 +rf2
+					geno_list[combo] = dfprob
+					start_position = ard_start_pos[locus]
+					end_position = ard_end_pos[locus]
+					dstring1 = aa_mm.HLA_seq[da1].seq[start_position-1:end_position]
+					dstring2 = aa_mm.HLA_seq[da2].seq[start_position-1:end_position]
+					rstring1 = aa_mm.HLA_seq[ra1].seq[start_position-1:end_position]
+					rstring2 = aa_mm.HLA_seq[ra2].seq[start_position-1:end_position]
+					dstring1 = str(dstring1)
+					dstring2 = str(dstring2)
+					rstring1 = str(rstring1)
+					rstring2 = str(rstring2)
+					start_position = int(start_position)
+					end_position = int(end_position)
+					for pos in range(start_position,end_position):
+						#print(pos)
+						if (pos == 9) or (pos == 10) or (pos == 11) or (pos== 12) or (pos == 13) or (pos == 26) or (pos == 28) or (pos == 30):
+							daa1 = dstring1[pos-1]
+							daa2 = dstring2[pos-1]
+							raa1 = rstring1[pos-1]
+							raa2 = rstring2[pos-1]
+							daa = daa1 + daa2
+							#print(daa)
+							daa = ''.join(sorted(daa, key=str.lower))
+							#print(daa)
+							raa = raa1 + raa2
+							raa = ''.join(sorted(raa, key=str.lower))
+							#print(raa , daa)
+								#print(geno_list)
+							if(raa == daa):
+								#print("yes:", raa,daa)
+								continue
+							else:
+								print(raa,daa)
+								if combo not in probs:
+									probs[combo]=dfprob
+								else:
+									continue
+						else:
+							continue
+	#print(probs)
+	sumgeno = sum(geno_list.values())
+	sumpossible =sum(probs.values())
+	#nprobs = len(probs)
+	#print(nprobs)
+	#sumant= rdsumant*nprobs
+	print(sumgeno)
 	print(sumpossible)
 	#mm_prob = sumpossible/nprobs
-	mm_prob = sumpossible/sumant
+	mm_prob = sumpossible/sumgeno
 	print(mm_prob)
 
 	return mm_prob
