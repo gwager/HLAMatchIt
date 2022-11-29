@@ -16,7 +16,7 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
 import pandas as pd
 import random
-from aa_matching_msf import *
+from .aa_matching_msf import *
 aa_mm = AAMatch(dbversion=3500)
 import re
 
