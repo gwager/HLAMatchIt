@@ -3,7 +3,7 @@ from tracemalloc import start
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-from .aa_fibers import antigen2HFalleleFIBERS, getAAgenostringmatchFIBERSDR,getAAgenostringmatchFIBERSDQ, drfibersprob, dqfibersprob, getAAgenostringmatch
+from .aa_fibers import antigen2HFalleleFIBERS, getAAgenostringmatchFIBERS,drfibersprob, dqfibersprob, getAAgenostringmatch
 
 
 # Create your views here.
@@ -49,8 +49,8 @@ def DRQantigen2aa_out(request):
 
     print("Got alleles")
 
-    drfprob = getAAgenostringmatchFIBERSDR(ddr1alleles,ddr2alleles, rdr1alleles, rdr2alleles, drloc)
-    dqfprob = getAAgenostringmatchFIBERSDQ(ddq1alleles,ddq2alleles,rdq1alleles,rdq2alleles, dqloc)
+    drfprob = getAAgenostringmatchFIBERS(ddr1alleles,ddr2alleles, rdr1alleles, rdr2alleles, drloc)
+    dqfprob = getAAgenostringmatchFIBERS(ddq1alleles,ddq2alleles,rdq1alleles,rdq2alleles, dqloc)
 
     dDRa1,dDRa2,rDRa1,rDRa2,DRcount,DRpos,DRpos1,DRend_pos = getAAgenostringmatch(dalldr1,dalldr2,ralldr1,ralldr2, drloc)
     dDQa1,dDQa2,rDQa1,rDQa2,DQcount,DQpos,DQpos1,DQend_pos = getAAgenostringmatch(dalldq1,dalldq2,ralldq1,ralldq2, dqloc)
