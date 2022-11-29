@@ -18,7 +18,10 @@
     
     <h3 class="text-danger text-center font-weight-bold mt-5 mb-5"> Probability of FIBERS classifying pair as High Risk based on mismatching of DRB1 13 or 26, or DQB1 30 or 55, or positions with high Mutual Information</h3>
     <h3 class="text-danger text-center font-weight-bold mt-5 mb-5"> Mutual Information described by Pearson Correlation and Asymmetric Linkage Disequilibrium </h3>
+    <h3 class="text-danger text-center font-weight-bold mt-5 mb-5"> Probabilities Calculated from Frequencies of all Possible Alleles of Specified Genetic Reference Population</h3>
+    <h3 class="text-danger text-center font-weight-bold mt-5 mb-5"> Allele Frequencies from NMDP </h3>
     <h3 class="text-danger text-center font-weight-bold mt-5 mb-5"> Based on Multiple Sequence Alignments from IMGT/HLA </h3>
+
 </div>
 
 <br>
@@ -35,11 +38,11 @@
                 <tr> 
                   <h4 class=" text-danger font-weight-bold mb-3 mt-5"> Would FIBERS stratify Donor-Recipient Pair as High Risk? </h4>
                   <th scope="col"> <h4> Prediction</h4> </th>
-                  <th scope="col"> <h4> Probability of one or more AA-MM given Frequency of all possible DR Alleles in Genetic Reference Population</h4> </th>
-                  <th scope="col"> <h4> Probability of one or more AA-MM given Frequency of all possible DQ Alleles in Genetic Reference Population</h4> </th>
-                  <th scope="col"> <h4> Average Hazard Ratio for AA MM at Associated Positions</h4> </th>
-                  <th scope="col"> <h4> FIBERS DRB1 High Risk AA-MMs in Most Probable Allele</h4> </th>
-                  <th scope="col"> <h4> FIBERS DQB1 High Risk AA-MMs in Most Probable Allele</h4> </th>
+                  <th scope="col"> <h4> DRB1 Probability of >=1AA-MM</h4> </th>
+                  <th scope="col"> <h4> DQB1 Probability of >=1AA-MM</h4> </th>
+                  <th scope="col"> <h4> Average Hazard Ratio for AA-MM</h4> </th>
+                  <th scope="col"> <h4> DRB1 Probability of AA-MM Positions</h4> </th>
+                  <th scope="col"> <h4> DQB1 Probability of AA-MM Positions</h4> </th>
 
                 </tr>
             </thead>
@@ -51,8 +54,8 @@
     <td>{{drfprob}}</td>
     <td>{{dqfprob}}</td>
     <td>{{fhazard}}</td>
-    <td>{{DRpos2}}</td>
-    <td>{{DQpos2}}</td>
+    <td>{{drposprobs}}</td>
+    <td>{{dqposprobs}}</td>
   </tr>
 </tbody>
   </table>  

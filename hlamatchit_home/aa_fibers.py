@@ -419,8 +419,14 @@ def antigen2HFalleleFIBERS(race,antigen):
 
 def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus):
 	probs = defaultdict(dict)
+	pos_freqs = defaultdict(dict)
+	pos_probs = []
+
+	#dictionary for D or R genotype frequency for prob calculations
 	geno_list_donor = defaultdict(dict)
 	geno_list_recip = defaultdict(dict)
+
+	#dictionary for D|R pair genotype frequency for prob calculations
 	dr_geno = defaultdict(dict)
 	start_position = ard_start_pos[locus]
 	end_position = ard_end_pos[locus]
@@ -491,10 +497,16 @@ def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus
 					raa = ''.join(sorted(raa, key=str.lower))
 					#print(raa , daa)
 						#print(geno_list)
+					show = raa + '|'+ daa
 					if(raa == daa):
 						#print("yes:", raa,daa)
 						continue
 					else:
+						draafreq = (rfgeno*rfgeno)+(dfgeno*dfgeno)
+						if pos not in pos_freqs:
+							pos_freqs[pos]= draafreq
+						else: 
+							pos_freqs[pos]= pos_freqs[pos]+draafreq
 						if combo not in probs:
 							probs[combo]=drfreq
 						else:
@@ -518,6 +530,11 @@ def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus
 						#print("yes:", raa,daa)
 						continue
 					else:
+						draafreq = (rfgeno*rfgeno)+(dfgeno*dfgeno)
+						if pos not in pos_freqs:
+							pos_freqs[pos]= draafreq
+						else: 
+							pos_freqs[pos]= pos_freqs[pos]+draafreq
 						if combo not in probs:
 							probs[combo]=drfreq
 						else:
@@ -527,10 +544,19 @@ def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus
 	#get probability of MM from summation of MM dict diveded by summation of all genotype freqs dict
 	sumgeno = sum(dr_geno.values())
 	sumpossible =sum(probs.values())
-
 	mm_prob = sumpossible/sumgeno
 
-	return mm_prob
+	for pos in pos_freqs:
+		sumpos = pos_freqs.get(pos)
+		summm =sum(pos_freqs.values())
+		pos_prob = sumpos/summm
+		spos =str(pos) 
+		spos_prob = str(pos_prob)
+		pos_combo = spos+ ':' + spos_prob
+		pos_probs.append(pos_combo)
+	pos_probs = ', '.join(str(item) for item in pos_probs)
+
+	return mm_prob, pos_probs
 
 
 #####TO_DO: GET RID of
@@ -877,105 +903,23 @@ def probcheck(possible_alleles,sumant):
 		probs.append(prob)
 	return probs
 
-def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locus):
-	probs = defaultdict(dict)
-	geno_list = defaultdict(dict)
-	showAAMM = defaultdict(dict)
-	for da1 in dalleles1:
-		for da2 in dalleles2:
-			for ra1 in ralleles1:
-				for ra2 in ralleles2:
-					da = (da1)+ '+' + (da2)
-					#print(daa)
-					#da = '+'.join(sorted(da, key=str.lower))
-					#print(daa)
-					ra = (ra1) + '+' + (ra2)
-					#a = '+'.join(sorted(ra, key=str.lower))
-					combo = (da) + '|' + (ra)
-					#print("combo:",combo)
-					df1 = dalleles1.get(da1)
-					df2 = dalleles2.get(da2)
-					#ddr1 = df1/d1sumant
-					#ddr2 = df2/d2sumant
-					#ddr = ddr1 + ddr2
-					#ddrprob = ddr/2
-
-					rf1 = ralleles1.get(ra1)
-					rf2 = ralleles2.get(ra2)
-					#rdr1 = rf1/r1sumant
-					#rdr2 = rf2/r2sumant
-
-					#rdr = rdr1 + rdr2
-					#rdrprob = rdr/2
-
-					#drprob = ddrprob + rdrprob
-					#dfprob = drprob/2
-					dfprob = df1 +df2 +rf1 +rf2
-					geno_list[combo] = dfprob
-					start_position = ard_start_pos[locus]
-					end_position = ard_end_pos[locus]
-					dstring1 = aa_mm.HLA_seq[da1].seq[start_position-1:end_position]
-					dstring2 = aa_mm.HLA_seq[da2].seq[start_position-1:end_position]
-					rstring1 = aa_mm.HLA_seq[ra1].seq[start_position-1:end_position]
-					rstring2 = aa_mm.HLA_seq[ra2].seq[start_position-1:end_position]
-					dstring1 = str(dstring1)
-					dstring2 = str(dstring2)
-					rstring1 = str(rstring1)
-					rstring2 = str(rstring2)
-					start_position = int(start_position)
-					end_position = int(end_position)
-					for pos in range(start_position,end_position):
-						#print(pos)
-						if (pos == 30) or (pos == 38) or (pos==53) or (pos == 55) or (pos == 66) or (pos== 67) or (pos== 71) or (pos == 74) or (pos== 77) or (pos== 84) or (pos == 85) or (pos==89) or (pos== 90):
-							daa1 = dstring1[pos-1]
-							daa2 = dstring2[pos-1]
-							raa1 = rstring1[pos-1]
-							raa2 = rstring2[pos-1]
-							daa = daa1 + daa2
-							#print(daa)
-							daa = ''.join(sorted(daa, key=str.lower))
-							#print(daa)
-							raa = raa1 + raa2
-							raa = ''.join(sorted(raa, key=str.lower))
-							if(raa == daa):
-								continue
-							else:
-								if daa not in showAAMM[combo]:
-									showAAMM[combo][raa][daa]=pos
-								else:
-									continue
-								if combo not in probs:
-									probs[combo]=dfprob
-								else:
-									continue
-						else:
-							continue
-	print("Get a dictionary of AMMs identified as HighRisk:", dict(islice(showAAMM.items(), 0, 4)))
-	print("Get a dictionary of various DQ Combinations for donors and recipients and check for AMM at those identified as HighRisk:", dict(islice(geno_list.items(), 0, 4)))
-	print("Get a dictionary of various DQ Combinations for donors and recipients with AMMs at those identified as HighRisk:", dict(islice(probs.items(), 0, 4)))
-	sumgeno = sum(geno_list.values())
-	sumpossible =sum(probs.values())
-	print("Take the sum of the D|R frequencies that will MM:", sumpossible)
-	print("And divide by the sum of all D|R frequencies:", sumgeno)
-
-	#nprobs = len(probs)
-	#print(nprobs)
-	#sumant= rdsumant*nprobs
-	#print(sumant)
-	#print(sumpossible)
-	#mm_prob = sumpossible/nprobs
-	mm_prob = sumpossible/sumgeno
-	print("To get the overall probability of MM:",mm_prob)
-
-	return mm_prob
 
 
 def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locus):
 	probs = defaultdict(dict)
+
+	#Dictionaries to calculate AA-MM Probabilities
+	pos_freqs = defaultdict(dict)
 	pos_probs = defaultdict(dict)
+
+	#Dictionaries to store D or R Genotype Frequencies
 	geno_list_donor = defaultdict(dict)
 	geno_list_recip = defaultdict(dict)
+
+	#Dictionary to store D|R pair frequency
 	dr_geno = defaultdict(dict)
+
+	#Enumeration Dict
 	showAAMM = defaultdict(dict)
 	start_position = ard_start_pos[locus]
 	end_position = ard_end_pos[locus]
@@ -1053,10 +997,10 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 					else:
 						showAAMM[show]=pos
 						draafreq = (rfgeno*rfgeno)+(dfgeno*dfgeno)
-						if pos not in pos_probs:
-							pos_probs[pos]= draafreq
+						if pos not in pos_freqs:
+							pos_freqs[pos]= draafreq
 						else: 
-							pos_probs[pos]= pos_probs[pos]+draafreq
+							pos_freqs[pos]= pos_freqs[pos]+draafreq
 						if combo not in probs:
 							probs[combo]=drfreq
 						else:
@@ -1081,8 +1025,11 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 						continue
 					else:
 						draafreq = (rfgeno*rfgeno)+(dfgeno*dfgeno)
-						pos_probs[pos]= draafreq
 						showAAMM[show]=pos
+						if pos not in pos_freqs:
+							pos_freqs[pos]= draafreq
+						else: 
+							pos_freqs[pos]= pos_freqs[pos]+draafreq
 						if combo not in probs:
 							probs[combo]=drfreq
 						else:
@@ -1098,11 +1045,21 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 	sumpossible =sum(probs.values())
 	print("Take the sum of the D|R frequencies that will MM:", sumpossible)
 	print("And divide by the sum of all D|R frequencies:", sumgeno)
+	mm_prob = sumpossible/sumgeno
+	print("To get the probability of >=1AAMM:",mm_prob)
 
-	for pos in pos_probs:
+	for pos in pos_freqs:
 		print("AAMM pos:", pos)
-		sumpos = pos_probs.get(pos)
+		sumpos = pos_freqs.get(pos)
+		summm =sum(pos_freqs.values())
 		print("Take the sum of the positions D|R frequencies that will MM at the position:", sumpos)
+		print("Divide by the sum of all positions D|R frequencies that will MM at the position:", summm)
+		pos_prob = sumpos/summm
+		print("To get the probability of the specific AAMM:", pos_prob)
+		pos_probs[pos]=pos_prob
+	print("Store all AAMM probs in a dict to be a return value of the function:", pos_probs)
+
+
 
 	#nprobs = len(probs)
 	#print(nprobs)
@@ -1110,10 +1067,9 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 	#print(sumant)
 	#print(sumpossible)
 	#mm_prob = sumpossible/nprobs
-	mm_prob = sumpossible/sumgeno
-	print("To get the overall probability of MM:",mm_prob)
 
-	return mm_prob
+
+	return mm_prob, pos_probs
 
 # weighted choice from https://scaron.info/blog/python-weighted-choice.html
 def weighted_choice(seq, weights):
