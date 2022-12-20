@@ -16,7 +16,7 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
 import pandas as pd
 import random
-from .aa_matching_msf import *
+from aa_matching_msf import *
 aa_mm = AAMatch(dbversion=3500)
 import re
 
@@ -421,6 +421,7 @@ def getAAgenostringmatchFIBERS(dalleles1, dalleles2, ralleles1, ralleles2, locus
 	probs = defaultdict(dict)
 	pos_freqs = defaultdict(dict)
 	pos_probs = []
+	aa_dr_probs = defaultdict(dict)
 
 	#dictionary for D or R genotype frequency for prob calculations
 	geno_list_donor = defaultdict(dict)
@@ -906,9 +907,20 @@ def probcheck(possible_alleles,sumant):
 
 
 def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locus):
+
+	#To calculate AA-MM pos probs
+	aa_geno_recip = defaultdict(dict)
+	aa_geno_donor = defaultdict(dict)
+	aa_prob_recip = defaultdict(dict)
+	aa_prob_donor = defaultdict(dict)
+	aa_dr_probs = defaultdict(dict)
+	aa_dr_mm_probs = defaultdict(dict)
+
 	probs = defaultdict(dict)
+	prob_check=defaultdict(dict)
 
 	#Dictionaries to calculate AA-MM Probabilities
+	all_pos_freqs = defaultdict(dict)
 	pos_freqs = defaultdict(dict)
 	pos_probs = defaultdict(dict)
 
@@ -931,25 +943,36 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 			if (da1 == da2):
 				df1 = dalleles1.get(da1)
 				gfreq = df1*df1
-				geno_list_donor[da]=gfreq
+				if da not in geno_list_donor:
+					geno_list_donor[da]=gfreq
+				else:
+					geno_list_donor[da]=geno_list_donor[da] + gfreq
 			else:
 				df1 = dalleles1.get(da1)
 				df2 = dalleles2.get(da2)
 				gfreq = 2*df1*df2
-				geno_list_donor[da]=gfreq
-
+				if da not in geno_list_donor:
+					geno_list_donor[da]=gfreq
+				else:
+					geno_list_donor[da]=geno_list_donor[da] + gfreq
 	for ra1 in ralleles1:
 		for ra2 in ralleles2:
 			ra = (ra1) + '+' + (ra2)
 			if (ra1 == ra2):
 				rf1 = ralleles1.get(ra1)
 				gfreq = rf1*rf1
-				geno_list_recip[ra]=gfreq
+				if ra not in geno_list_recip:
+					geno_list_recip[ra]=gfreq
+				else:
+					geno_list_recip[ra]=geno_list_recip[ra] + gfreq			
 			else:
 				rf1 = ralleles1.get(ra1)
 				rf2 = ralleles2.get(ra2)
 				gfreq = 2*rf1*rf2
-				geno_list_recip[ra]=gfreq
+				if ra not in geno_list_recip:
+					geno_list_recip[ra]=gfreq
+				else:
+					geno_list_recip[ra]=geno_list_recip[ra] + gfreq	
 
 	#Get strings for donor and recip geno types, calculate pair frequency, and store for probability calculation
 	for dgeno in geno_list_donor:
@@ -968,12 +991,13 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 			rstring1 = str(rstring1)
 			rstring2 = str(rstring2)
 
-			if (dgeno == rgeno):
-				drfreq = rfgeno*dfgeno
+			drfreq = rfgeno*dfgeno
+			#print("To calculate D|R probability of", combo , "multiply recipient frequency by donor frequency:", rfgeno, '*', dfgeno, '=', drfreq )
+			if combo not in dr_geno:
 				dr_geno[combo] = drfreq
 			else:
-				drfreq = 2*rfgeno*dfgeno
-				dr_geno[combo] = drfreq
+				dr_geno[combo] = dr_geno[combo] + drfreq
+
 
 			#based on locus check for MM at select positions and if there are store combo and freq in MM dictionary for probability calcs
 			if (locus == "DRB1"):
@@ -991,16 +1015,29 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 					#print(raa , daa)
 						#print(geno_list)
 					show = raa + '|'+ daa
+					if raa not in aa_geno_recip[pos]:
+						aa_geno_recip[pos][raa]=rfgeno
+					else:
+						aa_geno_recip[pos][raa]=aa_geno_recip[pos][raa]+rfgeno
+					if daa not in aa_geno_donor[pos]:
+						aa_geno_donor[pos][daa]=dfgeno
+					else:
+						aa_geno_donor[pos][daa]=aa_geno_donor[pos][daa]+dfgeno
+
+					draafreq = rfgeno*dfgeno
+					if pos not in all_pos_freqs:
+						all_pos_freqs[pos]= draafreq
+					else: 
+						all_pos_freqs[pos]=all_pos_freqs[pos]+draafreq
 					if(raa == daa):
 						#print("yes:", raa,daa)
 						continue
 					else:
 						showAAMM[show]=pos
-						draafreq = (rfgeno*rfgeno)+(dfgeno*dfgeno)
 						if pos not in pos_freqs:
 							pos_freqs[pos]= draafreq
 						else: 
-							pos_freqs[pos]= pos_freqs[pos]+draafreq
+							pos_freqs[pos]=pos_freqs[pos]+draafreq
 						if combo not in probs:
 							probs[combo]=drfreq
 						else:
@@ -1020,16 +1057,30 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 					raa = ''.join(sorted(raa, key=str.lower))
 					#print(raa , daa)
 						#print(geno_list)
+					show = raa + '|'+ daa
+					if raa not in aa_geno_recip[pos]:
+						aa_geno_recip[pos][raa]=rfgeno
+					else:
+						aa_geno_recip[pos][raa]=aa_geno_recip[pos][raa]+rfgeno
+					if daa not in aa_geno_donor[pos]:
+						aa_geno_donor[pos][daa]=dfgeno
+					else:
+						aa_geno_donor[pos][daa]=aa_geno_donor[pos][daa]+dfgeno
+
+					draafreq = rfgeno*dfgeno
+					if pos not in all_pos_freqs:
+						all_pos_freqs[pos]= draafreq
+					else: 
+						all_pos_freqs[pos]=all_pos_freqs[pos]+draafreq
 					if(raa == daa):
 						#print("yes:", raa,daa)
 						continue
 					else:
-						draafreq = (rfgeno*rfgeno)+(dfgeno*dfgeno)
 						showAAMM[show]=pos
 						if pos not in pos_freqs:
 							pos_freqs[pos]= draafreq
 						else: 
-							pos_freqs[pos]= pos_freqs[pos]+draafreq
+							pos_freqs[pos]=pos_freqs[pos]+draafreq
 						if combo not in probs:
 							probs[combo]=drfreq
 						else:
@@ -1037,37 +1088,96 @@ def getAAgenostringmatchFIBERSE(dalleles1, dalleles2, ralleles1, ralleles2, locu
 				
 
 	#get probability of MM from summation of MM dict diveded by summation of all genotype freqs dict
+	print("Loci analyzed for High Risk AA-MM Pos:", locus)
+	print("Get a dictionary of Donor genotype frequencys:", dict(islice(geno_list_donor.items(), 0, 4)))
+	print("Get a dictionary of Recipient genotype frequencys:", dict(islice(geno_list_recip.items(), 0, 4)))
+	print("Probabilitys of D|R pair:", dict(islice(dr_geno.items(), 0, 4)))
+	print("Probabilitys of D|R pair with AAMMs identified as HighRisk:", dict(islice(probs.items(), 0, 4)))
 	print("Get a dictionary of AAMMs identified as HighRisk:", dict(islice(showAAMM.items(), 0, 4)))
-	print("Get a dictionary of frequencys for AAMMs identified as HighRisk:", dict(islice(pos_probs.items(), 0, 4)))
-	print("Get a dictionary of various DR Combinations for donors and recipients and check for AAMM at those identified as HighRisk:", dict(islice(dr_geno.items(), 0, 4)))
-	print("Get a dictionary of various DR Combinations for donors and recipients with AAMMs at those identified as HighRisk:", dict(islice(probs.items(), 0, 4)))
+	print("Get a dictionary of frequencys for AAMMs identified as HighRisk:", dict(islice(pos_freqs.items(), 0, 4)))
 	sumgeno = sum(dr_geno.values())
 	sumpossible =sum(probs.values())
+
+	for geno in probs:
+		possible_geno = probs.get(geno)
+		possible_prob = possible_geno/sumgeno
+		#print("Probability of Specific D|R Pair Mismatching:", geno , "-", possible_geno, "/",sumpossible, "=", possible_prob)
+		prob_check[geno]=possible_prob
+	expected_prob =sum(prob_check.values())
+	#print("Store all D|R genotype MM probability combinations to check calculated >=1AAMM probability:", prob_check)
+	print("Sum the dictionary to find the overall expected probability for >=1AAMM:", expected_prob)
+
 	print("Take the sum of the D|R frequencies that will MM:", sumpossible)
 	print("And divide by the sum of all D|R frequencies:", sumgeno)
 	mm_prob = sumpossible/sumgeno
 	print("To get the probability of >=1AAMM:",mm_prob)
 
+	print("Store all AA assignments and frequencies for Recip genotypes to calculate AA-MM pos probs:", aa_geno_recip)
+	print("Store all AA assignments and frequencies  for Donors genotypes to calculate AA-MM pos probs:", aa_geno_donor)
+
+	for pos in aa_geno_recip:
+		aa_list = aa_geno_recip.get(pos)
+		sumgenopos =sum(aa_list.values())
+		#print(aa_list)
+		print("To show AA-MM prob calculations of recipient for position:", pos)
+		for aaR in aa_list:
+			sumpos = aa_list.get(aaR)
+			print("Take the AA assignment frequency at the position:", sumpos)
+			print("Divide by the sum of the all AA assignment frequencies at the position:", sumgenopos)
+			pos_prob = sumpos/sumgenopos
+			print("To get the probability of the specific AA assignment:", pos_prob)
+			aa_prob_recip[pos][aaR]=pos_prob
+	print("Store all Recip AA assignment probs in a dict to calculate AA-MM positional probs between D|R:", aa_prob_recip)
+
+	for pos in aa_geno_donor:
+		aa_list = aa_geno_donor.get(pos)
+		sumgenopos =sum(aa_list.values())
+		#print(aa_list)
+		for aaD in aa_list:
+			sumpos = aa_list.get(aaD)
+			#print("Take the AA assignment frequency at the position:", sumpos)
+			#print("Divide by the sum of the all AA assignment frequencies at the position:", sumgenopos)
+			pos_prob = sumpos/sumgenopos
+			#print("To get the probability of the specific AA assignment:", pos_prob)
+			aa_prob_donor[pos][aaD]=pos_prob
+	print("Store all Donor AA assignment probs in a dict to calculate AA-MM positional probs between D|R:", aa_prob_donor)
+
+	for pos in dr_fibers_pos:
+		print("Extract AA-MM probs from aa_prob_donor and aa_prob_recip for position:", pos)
+		raa_list = aa_prob_recip.get(pos)
+		daa_list = aa_prob_donor.get(pos)
+		print(raa_list)
+		print(daa_list)
+
+		for aaR in raa_list:
+			rprob = raa_list.get(aaR)
+			for aaD in daa_list:
+				show = aaD + '|'+ aaR
+				dprob = daa_list.get(aaD)
+				drprob = rprob * dprob
+				aa_dr_probs[pos][show]=drprob
+				print("Calculate AA D|R assighnment", show, "probabilitys:", dprob, '*',rprob, '=',drprob)
+				if (aaD == aaR):
+					continue
+				else:
+					aa_dr_mm_probs[show]=drprob
+	print("Store all D|R AA asssignment probs:", aa_dr_probs)
+	print("Store all D|R AA-MM asssignment probs:", aa_dr_mm_probs)
+	#expected =sum(aa_dr_mm_probs.values())
+	#print("Sum AA-MM probabilitys in aa_dr_mm_probs to get expected AA-MM prob of position 30:", expected)
+
+
+
 	for pos in pos_freqs:
-		print("AAMM pos:", pos)
+		print("Calculate AA-MM probability of pos:", pos)
 		sumpos = pos_freqs.get(pos)
-		summm =sum(pos_freqs.values())
-		print("Take the sum of the positions D|R frequencies that will MM at the position:", sumpos)
-		print("Divide by the sum of all positions D|R frequencies that will MM at the position:", summm)
-		pos_prob = sumpos/summm
+		sumgenopos =all_pos_freqs.get(pos)
+		print("Take the sum of D|R probs that will MM at the position:", sumpos)
+		print("Divide by the sum of all D|R probs at the position:", sumgenopos)
+		pos_prob = sumpos/sumgenopos
 		print("To get the probability of the specific AAMM:", pos_prob)
 		pos_probs[pos]=pos_prob
 	print("Store all AAMM probs in a dict to be a return value of the function:", pos_probs)
-
-
-
-	#nprobs = len(probs)
-	#print(nprobs)
-	#sumant= rdsumant*nprobs
-	#print(sumant)
-	#print(sumpossible)
-	#mm_prob = sumpossible/nprobs
-
 
 	return mm_prob, pos_probs
 
