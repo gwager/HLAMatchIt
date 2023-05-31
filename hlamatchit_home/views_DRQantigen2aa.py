@@ -3,8 +3,9 @@ from tracemalloc import start
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-from .aa_fibers import antigen2HFalleleFIBERS, getAAgenostringmatchFIBERS, getAAgenostringmatch
-
+#from .aa_fibers import antigen2HFalleleFIBERS, getAAgenostringmatchFIBERS, getAAgenostringmatch
+from .aa_fibers import *
+#antigen2HFalleleEwoP, DRDQFIBERSE
 
 # Create your views here.
 
@@ -26,7 +27,36 @@ def DRQantigen2aa_out(request):
     rantdq1 = request.GET['userinput46']
     rantdq2 = request.GET['userinput48']
 
+    if (dantdr2 == "DR" or dantdr2 == ""):
+        dantdr2 = dantdr1
+    if (rantdr2 == "DR" or rantdr2 == ""):
+        rantdr2 = rantdr1
 
+    if (dantdq2 == "DQ" or dantdq2 == ""):
+        dantdq2 = dantdq1
+    if (rantdq2 == "DQ" or rantdq2 == ""):
+        rantdq2 = rantdq1
+
+    ddr1alleles= antigen2HFalleleEwoP(drace,dantdr1)
+    ddr2alleles= antigen2HFalleleEwoP(drace,dantdr2)
+
+    ddq1alleles= antigen2HFalleleEwoP(drace,dantdq1)
+    ddq2alleles= antigen2HFalleleEwoP(drace,dantdq2)
+
+
+    #get Recipient most prob alleles
+
+    rdr1alleles= antigen2HFalleleEwoP(rrace,rantdr1)
+    rdr2alleles = antigen2HFalleleEwoP(rrace,rantdr2)
+
+    rdq1alleles = antigen2HFalleleEwoP(rrace,rantdq1)
+    rdq2alleles= antigen2HFalleleEwoP(rrace,rantdq2)
+
+    mm_prob,drfprob,dqfprob = DRDQFIBERSE(ddr1alleles,ddr2alleles, rdr1alleles, rdr2alleles,ddq1alleles,ddq2alleles,rdq1alleles,rdq2alleles)
+
+    return render(request, 'DRQantigen2aa_out.html', 
+        {'drposprobs':drfprob,'dqposprobs':dqfprob, 'mm_prob': mm_prob})
+    '''
     drloc = "DRB1"
     dqloc = "DQB1"
 
@@ -82,3 +112,4 @@ def DRQantigen2aa_out(request):
 
     return render(request, 'DRQantigen2aa_out.html', 
         {'drposprobs':drposprobs,'dqposprobs':dqposprobs,'ddr1prob':ddr1prob, 'ddr2prob' : ddr2prob,'rdr1prob' : rdr1prob, 'rdr2prob' : rdr2prob, 'ddq1prob' : ddq1prob, 'ddq2prob' : ddq2prob, 'rdq1prob' : rdq1prob, 'rdq2prob' : rdq2prob, 'drace': drace,'dantdr1': dantdr1, 'dalldr1': dalldr1, 'dfdr1': dfdr1, 'dantdr2': dantdr2, 'dalldr2': dalldr2, 'dfdr2' : dfdr2, 'dantdq1': dantdq1, 'dalldq1':dalldq1,'dfdq1':dfdq1,'dantdq2':dantdq2,'dalldq2':dalldq2,'dfdq2':dfdq2, 'rrace': rrace, 'rantdr1': rantdr1, 'ralldr1': ralldr1, 'rfdr1': rfdr1, 'rantdr2': rantdr2, 'ralldr2': ralldr2, 'rfdr2' : rfdr2,'rantdq1': rantdq1, 'ralldq1':ralldq1,'rfdq1':rfdq1,'rantdq2':rantdq2,'ralldq2':ralldq2,'rfdq2':rfdq2, 'drrange': drrange, 'DRcount':DRcount, 'DRpos' : DRpos, 'DRpos1': DRpos1, 'dqrange': dqrange, 'DQcount':DQcount, 'DQpos' : DQpos, 'DQpos1': DQpos1,'fpred' : fpred,'dqfprob' : dqfprob, 'drfprob': drfprob,'fhazard': fhazard})
+    '''
